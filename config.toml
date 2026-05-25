@@ -4,11 +4,15 @@
 # These lines are used to confirm a retailer email was actually shipped TO KNET.
 # Match is case-insensitive and whitespace-tolerant. At least one must appear in
 # the email body for the email to count as outbound-to-KNET.
-# TODO(user): paste your KNET warehouse address lines here, one per line.
+#
+# IMPORTANT: don't use short strings like "KNET" — they false-match inside
+# URL-encoded blobs and base64 junk (e.g. "knet" matched inside
+# "...rknetefewehro..."). Use the actual street + city/zip from the shipping
+# label so the match is anchored to an address block.
 warehouse_address_lines = [
-  "KNET",
   "1709 Imperial Way",
-  # TODO(user): add suite/unit, city, state, zip if you want stricter matching.
+  "West Deptford, NJ 08066",
+  "West Deptford, New Jersey 08066",
 ]
 sender_domain = "knetgroup.com"
 

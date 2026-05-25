@@ -24,8 +24,12 @@ _BASE_CONFIDENCE = 0.4
 _CONFIDENCE_PER_FIELD = 0.05  # bumped for each non-trivial field we pulled
 
 ORDER_NUMBER_RE = re.compile(
+    # Real order numbers always contain at least one digit. Without the lookahead this
+    # regex captures English words that happen to follow "order" or "confirmation" —
+    # PLEASE, READY, CONFIRMATION, WITH, etc. — which then poison the cross-reference
+    # verified-orders index.
     r"(?:order(?:\s*(?:number|no\.?|#))?|confirmation(?:\s*(?:number|no\.?|#))?)"
-    r"[:\s#]*([A-Z0-9][A-Z0-9\-]{3,19})",
+    r"[:\s#]*(?=[A-Z0-9\-]*\d)([A-Z0-9][A-Z0-9\-]{3,19})",
     re.IGNORECASE,
 )
 SIZE_RE = re.compile(r"(?:^|\s)(?:size|US|EU)[:\s]*((?:\d{1,2})(?:\.\d)?(?:[WMY])?)\b", re.IGNORECASE)
