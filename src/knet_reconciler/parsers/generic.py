@@ -78,6 +78,17 @@ def is_shipment_subject(subject: str | None) -> bool:
     return any(p in s for p in _SHIPMENT_SUBJECT_PATTERNS)
 
 
+# Subjects that indicate the order was cancelled or refunded. These pull the matching
+# (retailer, order_number) back OUT of the verified-orders index so shipment-side
+# cross-reference can't falsely claim them.
+_CANCELLATION_SUBJECT_PATTERNS = ("cancel", "refund")
+
+
+def is_cancellation_subject(subject: str | None) -> bool:
+    s = (subject or "").lower()
+    return bool(s) and any(p in s for p in _CANCELLATION_SUBJECT_PATTERNS)
+
+
 def _root_domain(domain: str | None) -> str:
     parts = (domain or "").lower().split(".")
     if len(parts) >= 2:

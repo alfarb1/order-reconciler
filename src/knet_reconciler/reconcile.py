@@ -24,6 +24,7 @@ from .parsers.generic import (
     _root_domain,
     _text_from_email,
     address_matches,
+    is_cancellation_subject,
     set_verified_orders,
 )
 
@@ -47,10 +48,34 @@ def _build_verified_orders(session: Session, warehouse_address_lines: list[str])
     """Pre-pass over ALL cached emails (parsed or not). Whenever an email body contains the
     KNET warehouse address, every order number it mentions is treated as "address-verified"
     for that retailer's root domain. Shipment-notification emails that lack the address inline
-    can then be accepted by cross-referencing their order number against this index."""
+    can then be accepted by cross-referencing their order number against this index.
+
+    Cancellation/refund emails pull their (retailer, order_number) back out — Nike and ASICS
+    in particular send order-received emails that hit the address filter, then a separate
+    cancellation email arrives later; we don't want the cancelled order numbers polluting the
+    index."""
     verified: set[tuple[str, str]] = set()
-    for email in session.query(Email).all():
+    cancelled: set[tuple[str, str]] = set()
+
+    emails = session.query(Email).all()
+
+    for email in emails:
         if email.from_domain and email.from_domain.endswith("knetgroup.com"):
+            continue
+        if not is_cancellation_subject(email.subject):
+            continue
+        root = _root_domain(email.from_domain)
+        if not root:
+            continue
+        text = _text_from_email(email)
+        haystack = (email.subject or "") + "\n" + text
+        for order_num in _extract_order_numbers(haystack):
+            cancelled.add((root, order_num))
+
+    for email in emails:
+        if email.from_domain and email.from_domain.endswith("knetgroup.com"):
+            continue
+        if is_cancellation_subject(email.subject):
             continue
         text = _text_from_email(email)
         if not text or not address_matches(text, warehouse_address_lines):
@@ -60,7 +85,10 @@ def _build_verified_orders(session: Session, warehouse_address_lines: list[str])
             continue
         haystack = (email.subject or "") + "\n" + text
         for order_num in _extract_order_numbers(haystack):
-            verified.add((root, order_num))
+            key = (root, order_num)
+            if key in cancelled:
+                continue
+            verified.add(key)
     return verified
 
 
