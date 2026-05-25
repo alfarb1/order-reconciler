@@ -39,8 +39,39 @@ _USPS_PREFIX_DIGITS = ("92", "93", "94", "95", "96")  # IMpb prefix digits
 # context (the URL host, or surrounding text) to disambiguate.
 _FEDEX_RE = re.compile(r"\b(\d{12}|\d{15}|\d{20}|\d{22})\b")
 
-# DHL: 10-11 digits, or JD/JJD prefix (DHL eCommerce).
+_DHL_PREFIX_RE = re.compile(r"\b(JJD\d{10,18}|JD\d{12,16})\b")
+_DHL_BARE_RE = re.compile(r"\b(\d{10,11})\b")
 _DHL_RE = re.compile(r"\b(JJD\d{10,18}|JD\d{12,16}|\d{10,11})\b")
+
+# Carrier-context patterns: the carrier name or hostname appearing in the email
+# body. Bare-numeric DHL/FedEx matches require this — without it, any 10-15 digit
+# run (order IDs, phone numbers, template placeholders) gets misclassified.
+_CARRIER_CONTEXT_RE = {
+    UPS:   re.compile(r"\bups\b|ups\.com", re.IGNORECASE),
+    FEDEX: re.compile(r"\bfedex\b|fedex\.com", re.IGNORECASE),
+    USPS:  re.compile(r"\busps\b|usps\.com|united\s+states\s+postal", re.IGNORECASE),
+    DHL:   re.compile(r"\bdhl\b|dhl\.com|mydhl", re.IGNORECASE),
+}
+
+
+def _has_context(text: str, carrier: Carrier) -> bool:
+    pat = _CARRIER_CONTEXT_RE.get(carrier)
+    return bool(pat and pat.search(text))
+
+
+def _is_obvious_placeholder(n: str) -> bool:
+    """Reject template values like '666666666666668' that show up in HTML emails as image
+    dimensions, CSS hex fragments, or actual placeholder copy. Only applied during the
+    free-text scan, not when the carrier URL itself names the number."""
+    if not n or not n.isdigit() or len(n) < 8:
+        return False
+    most_common = max(n.count(d) for d in set(n))
+    if most_common / len(n) >= 0.7:
+        return True
+    for i in range(len(n) - 7):
+        if len(set(n[i:i + 8])) == 1:
+            return True
+    return False
 
 # Carrier hostnames found in tracking links.
 _HOST_CARRIER = {
@@ -145,26 +176,38 @@ def _scan_text(text: str, hint: Carrier = UNKNOWN) -> list[Tracking]:
 
     def add(carrier: Carrier, raw: str):
         n = normalize(raw)
-        if n in seen:
+        if n in seen or _is_obvious_placeholder(n):
             return
         seen.add(n)
-        # If hint disagrees with detected carrier, prefer the more specific one.
         detected = detect_carrier_from_number(n)
-        chosen = detected if detected != UNKNOWN else hint
+        chosen = detected if detected != UNKNOWN else (carrier if carrier != UNKNOWN else hint)
         found.append(Tracking(carrier=chosen, number=n))
 
+    # Unambiguous formats (strict regex + prefix) — always accept.
     for m in _UPS_RE.finditer(text):
         add(UPS, m.group(1))
     for m in _USPS_INTL_RE.finditer(text):
         add(USPS, m.group(1))
-    for m in _DHL_RE.finditer(text):
+    for m in _DHL_PREFIX_RE.finditer(text):
         add(DHL, m.group(1))
+
+    # Bare 10-11 digit "DHL" — require DHL context to avoid catching phone numbers / order IDs.
+    if hint == DHL or _has_context(text, DHL):
+        for m in _DHL_BARE_RE.finditer(text):
+            add(DHL, m.group(1))
+
+    # USPS IMpb 20/22/26-digit — only if the prefix is in the IMpb set OR USPS context present.
     for m in _USPS_NUMERIC_RE.finditer(text):
-        add(USPS, m.group(1))
-    for m in _FEDEX_RE.finditer(text):
-        # Skip if already captured as USPS (the numeric regexes overlap).
-        if normalize(m.group(1)) not in seen:
-            add(FEDEX, m.group(1))
+        n = m.group(1)
+        if n[:2] in _USPS_PREFIX_DIGITS or hint == USPS or _has_context(text, USPS):
+            add(USPS, n)
+
+    # FedEx 12/15/20/22 digit — require FedEx context. The 20/22 lengths overlap with USPS so
+    # we still skip anything already captured.
+    if hint == FEDEX or _has_context(text, FEDEX):
+        for m in _FEDEX_RE.finditer(text):
+            if normalize(m.group(1)) not in seen:
+                add(FEDEX, m.group(1))
     return found
 
 
