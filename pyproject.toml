@@ -1,0 +1,42 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "knet-reconciler"
+version = "0.1.0"
+description = "Reconcile retailer shipping emails against KNET 'received' emails to find missing sneaker orders."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Alexander Farben" }]
+dependencies = [
+    "google-api-python-client>=2.120",
+    "google-auth-oauthlib>=1.2",
+    "google-auth-httplib2>=0.2",
+    "sqlalchemy>=2.0",
+    "beautifulsoup4>=4.12",
+    "lxml>=5.0",
+    "dateparser>=1.2",
+    "openpyxl>=3.1",
+    "typer>=0.12",
+    "rich>=13.7",
+    "python-dotenv>=1.0",
+    "tomli>=2.0; python_version < '3.11'",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+]
+
+[project.scripts]
+knet-reconcile = "knet_reconciler.cli:app"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/knet_reconciler"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"

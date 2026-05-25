@@ -1,0 +1,124 @@
+Delivered-To: alexander.farben@gmail.com
+Received: by 2002:a54:28d1:0:b0:2d0:8e99:8a9b with SMTP id d17csp3243910ecr;
+        Wed, 20 May 2026 11:22:20 -0700 (PDT)
+X-Received: by 2002:a17:902:da90:b0:2ba:6ebe:4897 with SMTP id d9443c01a7336-2bd7e8ae0afmr296450965ad.3.1779301340058;
+        Wed, 20 May 2026 11:22:20 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1779301340; cv=none;
+        d=google.com; s=arc-20240605;
+        b=bfNL3zACC6kZwAy/8ssO/suSzuv+xcSG5nGaHTU6IkM+mOSoh0hpKfWJWioRXsiE7e
+         hGjC0kBVF14idJsUiPU4gZDtxhOnz/JF3n4cgl1MLnXAxbe3ZqPGikwmARqztf1cwA3g
+         vN5EjSA8XEyboBUvsoVoz0yFdjsowcXcWMauhsUDkxqJawUVCibbiwQ4vR+4gVEuTyYI
+         X++gaeXXhaDPFnX8kv2Mf4GvFZNxRaFzKNpyKkl1l0BsjpDRoArcxJj6WdxlW2V7yD6s
+         2tr99fBr7smBsl/dW+FellpUGKekbO2KMIzmzzw0eBBD5U09CG3rhvJP65OUSBLXowUa
+         pZlA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=feedback-id:content-language:content-transfer-encoding:mime-version
+         :subject:message-id:to:from:date:dkim-signature:dkim-signature;
+        bh=104qCeBq/eUSl6npbOPuCdiorH0JMzV6YGap1PFQvGs=;
+        fh=Arl264+GFIWk9m3tpWNsbSey250Jpc/L59zaPEZvgng=;
+        b=JhJ14BdUB0QeLK6C9PALzij/aAewBVW/WTcEWNZDkxR5g+Ik6o2l7fH3DCkta9liZC
+         aIIYyUj6ZGuZk4Nc+CarGT4XFRA2Jl4Xofz0JA5AcWL3eb1q8h4+h8ZHyObnBl090fQV
+         3YJSH3x6si4sEe/SNHkY7pvGqqVjR+hTRzg3dzZu7oLOt49BLa7FYdeQ5nbVUktGu3yw
+         ytSBkVegXPbW3AMYu5uxhxZmfqlocpCFeJIBDNhPxSXtOHntFZMjvDAyViVCE6JnCUU2
+         JrX/zHoaB03fGp3bcjgdvAhfGQxccXwdnMsqPuSu9naj03Ze4Cx4ifdSYsM5r2FCZnXz
+         8kkQ==;
+        dara=google.com
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@knetgroup.com header.s=makaqh3jzhoqqwtcasuwbanavg2vttwp header.b=EyazlJ1+;
+       dkim=pass header.i=@amazonses.com header.s=hsbnp7p3ensaochzwyq5wwmceodymuwv header.b=NyqAEOxZ;
+       spf=pass (google.com: domain of 0101019e469fd0df-b3c44387-7034-4d3e-b250-1cef24e4371d-000000@bounce.knetgroup.com designates 206.55.150.26 as permitted sender) smtp.mailfrom=0101019e469fd0df-b3c44387-7034-4d3e-b250-1cef24e4371d-000000@bounce.knetgroup.com;
+       dmarc=pass (p=QUARANTINE sp=QUARANTINE dis=NONE) header.from=knetgroup.com
+Return-Path: <0101019e469fd0df-b3c44387-7034-4d3e-b250-1cef24e4371d-000000@bounce.knetgroup.com>
+Received: from h150-26.smtp-out.us-west-2.amazonses.com (h150-26.smtp-out.us-west-2.amazonses.com. [206.55.150.26])
+        by mx.google.com with ESMTPS id d9443c01a7336-2bd5d112065si483255265ad.88.2026.05.20.11.22.19
+        for <Alexander.farben@gmail.com>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 20 May 2026 11:22:20 -0700 (PDT)
+Received-SPF: pass (google.com: domain of 0101019e469fd0df-b3c44387-7034-4d3e-b250-1cef24e4371d-000000@bounce.knetgroup.com designates 206.55.150.26 as permitted sender) client-ip=206.55.150.26;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@knetgroup.com header.s=makaqh3jzhoqqwtcasuwbanavg2vttwp header.b=EyazlJ1+;
+       dkim=pass header.i=@amazonses.com header.s=hsbnp7p3ensaochzwyq5wwmceodymuwv header.b=NyqAEOxZ;
+       spf=pass (google.com: domain of 0101019e469fd0df-b3c44387-7034-4d3e-b250-1cef24e4371d-000000@bounce.knetgroup.com designates 206.55.150.26 as permitted sender) smtp.mailfrom=0101019e469fd0df-b3c44387-7034-4d3e-b250-1cef24e4371d-000000@bounce.knetgroup.com;
+       dmarc=pass (p=QUARANTINE sp=QUARANTINE dis=NONE) header.from=knetgroup.com
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=makaqh3jzhoqqwtcasuwbanavg2vttwp; d=knetgroup.com; t=1779301339;
+	h=Date:From:To:Message-ID:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding;
+	bh=j7LvWPYH/m/5kleo+qAHQOrLaRmfZjjGCJQGn9cn/h4=;
+	b=EyazlJ1+nOIVnIL9tRWnQlF+AyPdlGRo0k2CeEv1J+RggvBmmJsyxLSeIvHjFWIX
+	c8d0w620/ittX8nTI5ckhAarr0S14AQd6tadFflSgUD0V8eLt91nP6sVoLDNjVBeCXG
+	n7TCUqnTVm3s+8yFRVaK2CVssURwyMf0kGc5wTUGg2WDrprj2bVpmDL6Qlyts78jAyC
+	0RtfXOKlbmdY9Yp6mc/RFiI610syqm7LOtu/7avMtk7NZ9AaG/AgSBbyASjCInLusSG
+	IU3kvstHvQ56Dc0T6A6t+jiEV3lRUt6B/j85aoVkKwvMwPgjntk1VUkUYqALlnCD2Gv
+	lfCiUbgwSA==
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1779301339;
+	h=Date:From:To:Message-ID:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Feedback-ID;
+	bh=j7LvWPYH/m/5kleo+qAHQOrLaRmfZjjGCJQGn9cn/h4=;
+	b=NyqAEOxZN2HO2JDARGMtc3yfxs+CObm6SC8O67R/IAT+RQuF2ePU3+yqG6QitfRE
+	DnaoXrdwsBQK8H9qWodzAN6T6+7sbRG3PFASQ/kQAchsNKTxIqzzi+CC813V1rwnT+r
+	DvOjJc0XSM3+dpPj53pxBvmM6t6vmybZCdIg9lVs=
+Date: Wed, 20 May 2026 18:22:19 +0000
+From: KNET <notification@knetgroup.com>
+To: Alexander.farben@gmail.com
+Message-ID: <0101019e469fd0df-b3c44387-7034-4d3e-b250-1cef24e4371d-000000@us-west-2.amazonses.com>
+Subject: Your Incoming Shipment Has Been Received
+MIME-Version: 1.0
+Content-Type: text/html;charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Content-Language: utf-8
+Feedback-ID: ::1.us-west-2.xj9ttUvE87dyzE1HtByF3U7jhHf+Rc/bUF4J83g5ukI=:AmazonSES
+X-SES-Outgoing: 2026.05.20-206.55.150.26
+
+<!DOCTYPE html><html lang=3D"zh"><head>    <meta charset=3D"UTF-8">    <met=
+a name=3D"viewport" content=3D"width=3Ddevice-width, initial-scale=3D1.0"> =
+   <title>ITEMS ARRIVED</title>    <link href=3D"https://db.onlinewebfonts.=
+com/c/5d1513dcb21a784186b5f423c9cdfc90?family=3DGramatika+Trial+Black" rel=
+=3D"stylesheet">    <link href=3D"https://db.onlinewebfonts.com/c/6544945c3=
+8381f31cc8224974870cdbe?family=3DGramatika+Trial" rel=3D"stylesheet">    <s=
+tyle>        body {            font-family: Arial, sans-serif;            m=
+argin: 0;            padding: 0;            background-color: #ffffff;     =
+   }        .container {            max-width: 600px;            margin: 0 =
+auto;        }        .header {            padding: 0 26px;            marg=
+in-top: 28px;            font-family: 'Gramatika Trial Black', Arial, sans-=
+serif;            font-size: 64px;            font-weight: 900;            =
+line-height: 51px;            color: #000000;        }        .content {   =
+         margin-top: 23px;            margin-left: 26px;            width: =
+70%;            font-family: 'Gramatika Trial', Arial, sans-serif;         =
+   font-size: 17px;            font-weight: 400;            color: #000000;=
+        }        .info {            margin-top: 71px;        }        .imag=
+e-container {            max-width: 100%;        }        .image-container =
+img {            width: 100%;            height: auto;        }        .inf=
+o-content{            padding: 39px 28px 88px 62px;            color: #0000=
+00;        }        .info-content-title {            font-family: 'Gramatik=
+a Trial', Arial, sans-serif;            font-size: 21px;            font-we=
+ight: 400;            line-height: 26px;        }        .info-content-data=
+ {            margin-top: 16px;            font-family: 'Gramatika Trial Bl=
+ack', Arial, sans-serif;            font-size: 32px;            font-weight=
+: 900;            line-height: 38.4px;            word-break: break-all;   =
+     }    </style></head><body><div class=3D"container">    <div class=3D"h=
+eader">        <div style=3D"color: #94F188;">ITEMS</div>        <div>ARRIV=
+ED</div>    </div>    <div class=3D"content">        <div style=3D"line-hei=
+ght: 26px;">Hey Alex Farben-Griggs,</div>        <div style=3D"line-height:=
+ 17px;">Congrats! Your items have arrived at our warehouse. Please allow 1-=
+2 business days for them to be checked in. Thanks!</div>    </div>    <div =
+class=3D"info" style=3D"background-image: url('https://res.knetgroup.com/em=
+ail/assets/element1@2x.png'); background-size: 100% 100%; background-repeat=
+: no-repeat;">        <div class=3D"info-content">            <div class=3D=
+"info-content-title">TRACKING NUMBER:</div>            <b class=3D"info-con=
+tent-data">1Z0476YW0394383586</b>        </div>    </div>    <div class=3D"=
+image-container" style=3D"margin-top: 78px;">        <img src=3D"https://re=
+s.knetgroup.com/email/assets/Graphic.png" alt=3D"=E8=A3=85=E9=A5=B0=E5=9B=
+=BE=E7=89=87"/>    </div>    <div style=3D"padding: 33px 23px 14px 23px; po=
+sition: relative; background-color: #ffffff;">        <a href=3D"https://13=
+g26jlf.r.us-west-2.awstrack.me/L0/https:%2F%2Fwww.instagram.com%2Fknetgroup=
+%2F/1/0101019e469fd0df-b3c44387-7034-4d3e-b250-1cef24e4371d-000000/JMLionfE=
+FZES-4MT5hqXzaEE6x0=3D474" style=3D"float: left; width: 30px; height: 30px;=
+ margin-top: 28px;">            <img src=3D"https://res.knetgroup.com/email=
+/assets/ins.png" alt=3D"ins" style=3D"width: 100%; height: 100%;" />       =
+ </a>        <img src=3D"https://res.knetgroup.com/email/assets/Logo.png" a=
+lt=3D"logo" style=3D"width: 80px; height: 80px; float: right; position: abs=
+olute; right: 23px;" />    </div></div><img alt=3D"" src=3D"https://13g26jl=
+f.r.us-west-2.awstrack.me/I0/0101019e469fd0df-b3c44387-7034-4d3e-b250-1cef2=
+4e4371d-000000/e4nOKR-gIkSaSvTz65l2jK0ySXk=3D474" style=3D"display: none; w=
+idth: 1px; height: 1px;">
+</body></html>

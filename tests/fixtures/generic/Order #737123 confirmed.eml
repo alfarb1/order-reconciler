@@ -1,0 +1,2572 @@
+Delivered-To: alexander.farben@gmail.com
+Received: by 2002:a05:6400:4d3:b0:2d0:8e99:8a9b with SMTP id v19csp2114176eck;
+        Sun, 24 May 2026 07:06:18 -0700 (PDT)
+X-Received: by 2002:a05:6a00:4c93:b0:839:e27c:6cc9 with SMTP id d2e1a72fcca58-8415f36ce4bmr10652073b3a.35.1779631578518;
+        Sun, 24 May 2026 07:06:18 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1779631578; cv=none;
+        d=google.com; s=arc-20240605;
+        b=YG5Bjp2jtV6gX9t6+9DDthWIGyvcaki6k0g/cVX1eIMtBaSf7LGvOPKiJiLC1EhBft
+         TehydhItMMWwakwO6DIDrvb7OmpKfOJJjv6NHlkIAV/0N/HcXubfn3239/HcRsqKS4AC
+         ARlZ9wR8510wCzRWVwl1E24+ASW/cnWXSiVYnDnlMfYFMueO7WLXihPgbWI92KQp3SGL
+         3/U4XfwcQqA33G9EJjnoDuZ/Td+ZvhYBSKn1FBHvohaeAbzZRgRtlmhIBGV/8yaC0E4d
+         Q4ZV+Vt8gu4sku7jX2r2/5s6qChDHHRXVDS3RNkM+ZOAJS7B0THDwQWugwTtTaMY/ExM
+         +ltw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=to:feedback-id:reply-to:subject:message-id:mime-version:from:date
+         :dkim-signature:dkim-signature;
+        bh=aJmZEzghUZ6+UfXOLe3zoCHRth/m44kMwa+IfATJT9Q=;
+        fh=2bjXlrLXPSztMFLetsSUTj8ZX5+lT+N0Z13GnhjCvFI=;
+        b=BhrRVzaduVQEJk8SmtZyN/cY8BCrG4oWR3Z6FGq9oNQ37loT/OksF87rgcQ9fF+tR4
+         qC2DQdeciX4jQfYK0Pp+neU2UlEGQYVHtctM1ICsugrXABRpv8j6DxdUonochaheBcWc
+         yMZhEliyIkakx65CKsVmM4KHe2Rprk9SIlQNPA22BzG8pWl6rLbKtVNvz5G2ZKT9bRkD
+         yX+kkaRD5e1JW8oMW/fVNpjKFniGaEkK92dAd2XHKSgA60PIHRuieznCJzzjz6+cxr8f
+         CQgLySoStmGHDOeoU7N2B6rjmf1TYlQliMxqy/DsKSDZ3fTiSFx7gcZ7EIq3YII8fuuf
+         VseQ==;
+        dara=google.com
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@t.shopifyemail.com header.s=s1 header.b=Y4a35YcS;
+       dkim=pass header.i=@sendgrid.info header.s=smtpapi header.b=w+CTXRiP;
+       spf=pass (google.com: domain of bounces+11002745-3ab4-alexander.farben=gmail.com@mailer.t.shopifyemail.com designates 149.72.125.57 as permitted sender) smtp.mailfrom="bounces+11002745-3ab4-alexander.farben=gmail.com@mailer.t.shopifyemail.com";
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=shopifyemail.com
+Return-Path: <bounces+11002745-3ab4-alexander.farben=gmail.com@mailer.t.shopifyemail.com>
+Received: from o32.mailer.shopify.com (o32.mailer.shopify.com. [149.72.125.57])
+        by mx.google.com with ESMTPS id d2e1a72fcca58-8416503a4a3si16545443b3a.198.2026.05.24.07.06.18
+        for <alexander.farben@gmail.com>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 24 May 2026 07:06:18 -0700 (PDT)
+Received-SPF: pass (google.com: domain of bounces+11002745-3ab4-alexander.farben=gmail.com@mailer.t.shopifyemail.com designates 149.72.125.57 as permitted sender) client-ip=149.72.125.57;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@t.shopifyemail.com header.s=s1 header.b=Y4a35YcS;
+       dkim=pass header.i=@sendgrid.info header.s=smtpapi header.b=w+CTXRiP;
+       spf=pass (google.com: domain of bounces+11002745-3ab4-alexander.farben=gmail.com@mailer.t.shopifyemail.com designates 149.72.125.57 as permitted sender) smtp.mailfrom="bounces+11002745-3ab4-alexander.farben=gmail.com@mailer.t.shopifyemail.com";
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=shopifyemail.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=t.shopifyemail.com;
+	h=content-type:date:from:mime-version:subject:reply-to:feedback-id:to:
+	cc:content-type:date:feedback-id:from:subject:to;
+	s=s1; t=1779631577;
+	bh=aJmZEzghUZ6+UfXOLe3zoCHRth/m44kMwa+IfATJT9Q=;
+	b=Y4a35YcSmriz3r9YqJ/g389hb24CxFGIsu+hxK4a84E9PCF55V0uqilcefx4RPyNuhqP
+	G5ei1S+VONaWJssWgON0bIYRUvrKsea/fjdG9U6ihQCT3yxGoqA5GtnP3AfhUebZGTU63J
+	li9b8Wz+OEDwcKbEIjFz9RRpVn+myF2IJ2i8pxn13Yt1AkKuAn02Tt20eLjO8yFIJGq7w2
+	gpMhr7QhpUvE2fZCMhtwfRxYTTGIYgFukJ7q6dCkVWrqpNniNhWv7oAo2PtG2zNBmimLXP
+	HUfTDzHkuaXW0EwsqxS64WrNPVKKOKafpH0giit/a7u0oCzCdea7P5rqtfa1HFOQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sendgrid.info;
+	h=content-type:date:from:mime-version:subject:reply-to:feedback-id:to:
+	cc:content-type:date:feedback-id:from:subject:to;
+	s=smtpapi; t=1779631577;
+	bh=aJmZEzghUZ6+UfXOLe3zoCHRth/m44kMwa+IfATJT9Q=;
+	b=w+CTXRiPeCQtpH/G1brXbj8MoWpdZc288lA/W61wQKljKIYMC8+vDgxLRDQH1hBP6xnh
+	1U0m5jsJ+ignUSEhyQt6FsPQ8dBFM/qeQ9ioPhPLjER3gqECbtwy8dXZ/GDitAnIEIOgU9
+	BCKS5aK8nIvptvPxLm1yiO+90LajidpuE=
+Received: by recvd-6575d5864f-kpblg with SMTP id recvd-6575d5864f-kpblg-1-6A1305D9-24
+	2026-05-24 14:06:17.491085543 +0000 UTC m=+2219347.794356528
+Received: from MTEwMDI3NDU (unknown)
+	by geopod-ismtpd-114 (SG) with HTTP
+	id fAukAJuBSS2P-cXAE_uOEA
+	Sun, 24 May 2026 14:06:17.461 +0000 (UTC)
+Content-Type: multipart/alternative; boundary=2114f9d8ef6e6af34ada40d8a17f362738c2bc14ac0f4cd56846428f6a88
+Date: Sun, 24 May 2026 14:06:17 +0000 (UTC)
+From: Sneaker Politics <store+2147974@t.shopifyemail.com>
+Mime-Version: 1.0
+Message-ID: <E1020004-18B2857D94D3670C-654AE58A@shopify.com>
+Subject: Order #737123 confirmed
+Reply-To: Sneaker Politics <contact@sneakerpolitics.com>
+Feedback-Id: s_2147974:shopify
+X-SG-EID: 
+ =?us-ascii?Q?u001=2ERrnW=2FdplXXJJsAxZibqh8teL126=2Fnt086EdUle0NDo4jw07YVfwWd+eJH?=
+ =?us-ascii?Q?bdP3st=2F6C8e9UYLGBBE86rK9YEQTAAZlX8NNKVZ?=
+ =?us-ascii?Q?ShnxYU=2FkmLKiaM194sAh4ABOkzPa=2F6dgz6WVhx=2F?=
+ =?us-ascii?Q?5xfjZHs42zHBEPcMurOlqNYwGnjm4EyfGc0X5+e?=
+ =?us-ascii?Q?BZJ2c3gt4TuwDdlxZXsszMZ5AmcDyBBPbm22BCb?=
+ =?us-ascii?Q?=2FsosnHiwnX6I+D1En5NV8FH8W1T4ZdkVTVwl4sX?=
+ =?us-ascii?Q?sdRMhsbWWvFZ69pYWuY2XtDlZg=3D=3D?=
+X-SG-ID: 
+ =?us-ascii?Q?u001=2ESdBcvi+Evd=2FbQef8eZF3BpTL9BgbK5wfSJMJGMsmprDITwp3LLcgXu9gv?=
+ =?us-ascii?Q?F1Oq5oTf1VY9MM=2F=2FZCviT=2FP37sq39bh1t7qI1If?=
+ =?us-ascii?Q?A+G6a7KPruJxg=2F+Jf1BxFkV2J6hL9eykPGM7=2F6z?=
+ =?us-ascii?Q?YoHfCFb+0Xbi6QUOg3yUIeF9v34f4wq3PeTOHVB?=
+ =?us-ascii?Q?o9JjeIceEyLStyTKmeiqWvRD9sm=2FOigxnCjy6DU?=
+ =?us-ascii?Q?8GsA=2FtNxTqrR=2F3aoHcjJ0tH7BeDmzc6a7ZDGIzr?=
+ =?us-ascii?Q?suVa7Q70xni0302q0ZE0KSNf5m3=2FVLbFwQlF9SC?=
+ =?us-ascii?Q?rMy04uN+fQvUesFLaoDyI5JP9JCTwPuOKi8yMao?=
+ =?us-ascii?Q?scESmS7RsiT1n0ZA=2FW1irI5q3EJAVffQd0xC4zJ?=
+ =?us-ascii?Q?sEqOiskZ3gX8L0WXyI2pRQdxsI2aMYeO18HZl+J?=
+ =?us-ascii?Q?itQMEXKMLwVeyADjI8V47lRKQDyb60KNt9+X6oj?=
+ =?us-ascii?Q?xtJxQnGuX=2FHGOtI9ZWhl5n2LwHaM=2Fpbb2G6aa4n?=
+ =?us-ascii?Q?RdQD6ljZ8G7ws1zQf4D8+CO3k9sdtl4+IqaTFr=2F?=
+ =?us-ascii?Q?lUb3=2Fba2WdoIGVhptB3VewY1WR8+By1rj7gMgEy?=
+ =?us-ascii?Q?xJexk2tFvzU2Lu3c0g+KCxijgokCIA9DpRnANGq?=
+ =?us-ascii?Q?OuLMBDbCJuam1NmUZEtBlY5bBpGUDctzuJbNpR5?=
+ =?us-ascii?Q?aK5KqAq0taT4uXC=2FY0CBEMNv+v=2FuZJOH=2FC1UUkf?=
+ =?us-ascii?Q?jgRZMQc=2FLaIQIs8P37rZ3Ud0w=2Ff4jS5=2FlhUYTow?=
+ =?us-ascii?Q?1IxuakTHCl0WMxkewom+me42HoaMfO=2FB=2FDrAVn3?=
+ =?us-ascii?Q?iFqZtQRubv67LcBQGwMne8VEQgBAbGLGzEjdI2c?=
+ =?us-ascii?Q?motwZfPECLFvN=2Ffj26bwNnZZAbO1SCH3ro5BiPQ?=
+ =?us-ascii?Q?I95kOCLUgfrKdHt+A3LaBqctWcW432bVUQBtwPD?=
+ =?us-ascii?Q?4W5L26lEhuIP8I78Wkco07Vq=2Ff9VWaXJCq5Rc7B?=
+ =?us-ascii?Q?KlEGoJl+btNlJUKP2UFe4Zwo3tVu83RTWtxv6ve?=
+ =?us-ascii?Q?wS6wLj44z1qpa7rJlRyLnRmnqOvo9cpZSsVE+rS?=
+ =?us-ascii?Q?lvuIVduDGJd3MAIy4puG6yLonFvtS4BnOwIc5HX?=
+ =?us-ascii?Q?ih3NMPZN0nq5CLb91QVotm5juHYH3n4pBcwT9QK?=
+ =?us-ascii?Q?=2FCeWt9CD4wc1D2qik=2FPxjW8C508C3pNYVYveEKn?=
+ =?us-ascii?Q?PMvIM3tIqI7HvKEvh2iP0HhbqYTm=2Fvo1VV=2FEEGm?=
+ =?us-ascii?Q?i5hr72gyJ4D9aCy8x5HFU10EVLg5Pr9NBkEwbzF?=
+ =?us-ascii?Q?ATOVKwbh9vISjmn8bXzafxlP0voATBDkAgaJCUQ?=
+ =?us-ascii?Q?eRKTgdVL7kZsNmu2ZbFJqtcAvHauGfznQGt2nD2?=
+ =?us-ascii?Q?Ab4fiZ9yT7Xz7IOnWoK=2FDiCXiyjG4sZ+QIMqlpI?=
+ =?us-ascii?Q?eZXP=2F4kLNL6k2TY=2FuAcoJlfu1DkP870t4Fl=2Flee?=
+ =?us-ascii?Q?EXiS3T5zXvIji+CspXHDcrbtyWIaczKsKyPQvGC?=
+ =?us-ascii?Q?jCn9GAMWNvCVDnk9QrO6cwIQQ+QKQKVRn1NiWWp?=
+ =?us-ascii?Q?CA8gHdMj8PF+U0qR9LarY2hQnnpNMpe7FRnfb6K?=
+ =?us-ascii?Q?CSEdJ419ojS?=
+To: alexander.farben@gmail.com
+X-Entity-ID: u001.+1wxlBJzG/NtQoDv0bRa1Q==
+
+--2114f9d8ef6e6af34ada40d8a17f362738c2bc14ac0f4cd56846428f6a88
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Mime-Version: 1.0
+
+96
+
+/* What it does: Remove spaces around the email design
+added by some email clients. */
+/* Beware: It can remove the padding / Margin and add a
+background color to the compose a reply window. */
+html, body {
+Margin: 0 auto !important;
+padding: 0 !important;
+width: 100% !important;
+}
+/* What it does: Stops email clients resizing small text.
+*/
+* {
+-ms-text-size-adjust: 100%;
+-webkit-text-size-adjust: 100%;
+text-rendering: optimizeLegibility;
+}
+/* What it does: Forces Outlook.com to display emails
+full width. */
+.ExternalClass {
+width: 100%;
+}
+/* What is does: Centers email on Android 4.4 */
+div[style*=3D"Margin: 16px 0"] {
+Margin:0 !important;
+}
+/* What it does: Stops Outlook from adding extra spacing
+to tables. */
+table,
+th {
+mso-table-lspace: 0pt;
+mso-table-rspace: 0pt;
+}
+/* What it does: Fixes Outlook.com line height. */
+.ExternalClass,
+.ExternalClass * {
+line-height: 100% !important;
+}
+/* What it does: Fixes webkit padding issue. Fix for
+Yahoo mail table alignment bug. Applies table-layout to the first
+2 tables then removes for anything nested deeper. */
+table {
+border-spacing: 0 !important;
+border-collapse: collapse !important;
+border: none;
+Margin: 0 auto;
+direction: ltr;
+}
+div[style*=3D"Margin: 16px 0"] {
+Margin:0 !important;
+}
+/* What it does: Uses a better rendering method when
+resizing images in IE. */
+img {
+-ms-interpolation-mode:bicubic;
+}
+/* What it does: Overrides styles added when Yahoo's
+auto-senses a link. */
+.yshortcuts a {
+border-bottom: none !important;
+}
+/* What it does: Overrides blue, underlined link
+auto-detected by iOS Mail. */
+/* Create a class for every link style needed; this
+template needs only one for the link in the footer. */
+/* What it does: A work-around for email clients meddling
+in triggered links. */
+*[x-apple-data-detectors],  /* iOS */
+.x-gmail-data-detectors,    /* Gmail */
+.x-gmail-data-detectors *,
+.aBn {
+border-bottom: none !important;
+cursor: default !important;
+color: inherit !important;
+text-decoration: none !important;
+font-size: inherit !important;
+font-family: inherit !important;
+font-weight: inherit !important;
+line-height: inherit !important;
+}
+/* What it does: Overrides blue, underlined link
+auto-detected by Gmail. */
+u + #body a {
+color: inherit;
+text-decoration: none;
+font-size: inherit;
+font-family: inherit;
+font-weight: inherit;
+line-height: inherit;
+}
+
+/* What it does: Prevents Gmail from displaying an
+download button on large, non-linked images. */
+.a6S {
+display: none !important;
+opacity: 0.01 !important;
+}
+/* If the above doesn't work, add a .g-img class to any
+image in question. */
+img.g-img + div {
+display:none !important;
+}
+/* What it does: Prevents underlining the button text in
+Windows 10 */
+a,
+a:link,
+a:visited {
+color: #1d1d1d;
+text-decoration: none !important;
+}
+.header a {
+color: #c5c5c5;
+text-decoration: none;
+text-underline: none;
+}
+.main a {
+color: #1d1d1d;
+text-decoration: none;
+text-underline: none;
+word-wrap: break-word;
+}
+.main .section.customer_and_shipping_address a,
+.main .section.shipping_address_and_fulfillment_details a
+{
+color: #000000;
+text-decoration: none;
+text-underline: none;
+word-wrap: break-word;
+}
+.footer a {
+color: #000000;
+text-transform: uppercase;
+text-decoration: none;
+text-underline: none;
+}
+
+/* What it does: Overrides styles added images. */
+img {
+border: none !important;
+outline: none !important;
+text-decoration:none !important;
+}
+
+a {text-decoration: none;}
+
+li {
+text-indent: -1em; /* Normalise space between
+bullets and text */
+}
+
+/* Section specific premailer ignores */
+td.menu_bar_1 a:hover,
+td.menu_bar_6 a:hover {
+color: #1d1d1d !important;
+}
+th.related_product_wrapper.first {
+border-right: 10px solid #ffffff;
+}
+th.related_product_wrapper.last {
+border-left: 10px solid #ffffff;
+}
+
+@import
+url("https://fonts.googleapis.com/css?family=3D&subset=3Dlatin-ext");
+/* What it does: Fixes fonts for Google WebFonts in
+non-Outlook clients */
+[style*=3D"Arial"] {
+font-family:
+'Arial',-apple-system,BlinkMacSystemFont,'Segoe
+UI',Arial,sans-serif !important;
+}
+[style*=3D"Arial"] {
+font-family:
+'Arial',-apple-system,BlinkMacSystemFont,'Segoe
+UI',Arial,sans-serif !important;
+}
+[style*=3D"Arial"] {
+font-family:
+'Arial',-apple-system,BlinkMacSystemFont,'Segoe
+UI',Arial,sans-serif !important;
+}
+[style*=3D"Arial"] {
+font-family:
+'Arial',-apple-system,BlinkMacSystemFont,'Segoe
+UI',Arial,sans-serif !important;
+}
+
+Thank you for your purchase, this email confirms your
+order. We will send you another email as soon as your order is on
+its way.
+
+=CD=8F=E2=80=8C =CD=8F=E2=80=8C =CD=8F=E2=80=8C =CD=8F=E2=80=8C =CD=8F=E2=
+=80=8C =CD=8F=E2=80=8C =CD=8F=E2=80=8C =CD=8F=E2=80=8C =CD=8F=E2=80=8C =CD=
+=8F=E2=80=8C =CD=8F=E2=80=8C =CD=8F=E2=80=8C =CD=8F=E2=80=8C =CD=8F=E2=80=
+=8C =CD=8F=E2=80=8C =CD=8F=E2=80=8C =CD=8F=E2=80=8C =CD=8F=E2=80=8C =CD=8F=
+=E2=80=8C =CD=8F=E2=80=8C =CD=8F=E2=80=8C =CD=8F=E2=80=8C =CD=8F=E2=80=8C =
+=CD=8F=E2=80=8C =CD=8F=E2=80=8C =CD=8F=E2=80=8C
+
+
+( https://sneakerpolitics.com?syclid=3D07df31a4-bb37-4516-8fc3-9ec49168234a=
+&utm_campaign=3Dorder-confirmation-email&utm_content=3Dlogo&utm_medium=3Dem=
+ail&utm_source=3DOrderlyEmails )
+
+
+******************
+Order Confirmation
+******************
+
+Order #737123
+-------------
+
+May 24, 2026
+
+Hey
+
+Alex,
+
+Thank you for
+your purchase, this email confirms your order. We will send you
+another email as soon as your order is on its way.
+
+View Order=20
+( https://sneakerpolitics.com/2147974/orders/fdb942194fb8ea88aeff313d5fa8c0=
+ee/authenticate?key=3Dshcct_U0ViYTA2Yk1GUXBGRmdGdGFNZTMybC9pTGYrenlPOGxxRHM=
+2ZzNCaGFNR2F2dm81aW5NM09za3ZEQzlmcC91ZHUrclNQL0RMMUFsa25FMVVndVZNZzY2dHc2K2=
+hRUU1YSXRSa05IdGk4SGFSNkVDWkw0ZU1WcHN3REhWa0ZBcUdjczdtOXd4cml6S1EzM0VUNE45d=
+lhraW9sT0RnbnV4WmNoQzFxYXcxeGZLM2ZTZ3ZyUXhzazBZZUpUUWtiNjZPaFVoVmVzaFZnMnMw=
+YmhrRUZCNTBUc3k0dGFQd013OE9kRVRxL3ZYUEF6OWFCMnIwb2JQWnNyUFBCN3NoNG1LcVB6SER=
+GSDM2RTZrUE8rWnR6VXR6MVpCSzNrMXZCN0o0SXkzekF1M0xaTkE4V3JjSWNrZnZRc2ZjcFMvS3=
+E5R2kwdGMxZ0pxQlM1OGtLUjVPK0Q0MC9rM0lHOWFicnBUZ3ZNbTc1QmovYytkeHl0UzdTYXdVS=
+DQxOUJRcDY2R1dUaEF0RGRETzQzajM5VXg3aThVaE9pMWVFalZlUTZveFFpZW8wZlU2ZkpRNjh5=
+ZTRrQm5uekxPd09YN0tNNUZhYTI1YlVkRTJvU3RDdytHdVRIa0IxRTR5MXZJbDNqWGpLNHAzVnJ=
+qM1p0alQzNHVodVIzdlZLS2UzTHFQbzBUUGxKb2phQjRTcm5LdXB5WFg1bTdxZUtIaEZLRHhYUX=
+NBSjlvRWFQbGtnSDh3M2NwL3V4YjRXd01nPS0tbUErWEhDMHpGL05yZzZzUC0tN01VRi9icEI1U=
+mRKRnJZTWFTQWVXQT09&syclid=3D4185a146-b8d6-4612-af1e-350d533780c0 )
+
+
+Customer
+--------
+
+Alex Farben-Griggs
+491 Barrington drive
+Potsdam, NY 13676
+United States
+
+Shipping Address
+----------------
+
+Alex Farben-Griggs
+1709 Imperial Way
+UFXB
+West Deptford, NJ 08066
+United States
+
+ITEMS
+-----
+
+Nigel Sylvester x Jordan Half Zip Jacket - Anthracite/Sail - L=20
+( https://sneakerpolitics.com/products/nigel-sylvester-x-jordan-half-zip-ja=
+cket-anthracite-sail?syclid=3D96e01003-5daa-4fcf-8c72-13251088a654&utm_camp=
+aign=3Dorder-confirmation-email&utm_content=3Dproduct&utm_medium=3Demail&ut=
+m_source=3DOrderlyEmails )
+
+
+Nigel Sylvester x Jordan Half Zip Jacket - Anthracite/Sail=20
+( https://sneakerpolitics.com/products/nigel-sylvester-x-jordan-half-zip-ja=
+cket-anthracite-sail?syclid=3Ddba3f903-c686-4ffc-9f31-24e5ca8e0281&utm_camp=
+aign=3Dorder-confirmation-email&utm_content=3Dproduct&utm_medium=3Demail&ut=
+m_source=3DOrderlyEmails )
+
+
+L
+
+IQ8150-060|L
+
+x 1
+
+$150.00
+
+Nigel Sylvester x Jordan Half Zip Jacket - Anthracite/Sail - M=20
+( https://sneakerpolitics.com/products/nigel-sylvester-x-jordan-half-zip-ja=
+cket-anthracite-sail?syclid=3Dca71b38a-4a15-48f0-81a2-5f54f134e097&utm_camp=
+aign=3Dorder-confirmation-email&utm_content=3Dproduct&utm_medium=3Demail&ut=
+m_source=3DOrderlyEmails )
+
+
+Nigel Sylvester x Jordan Half Zip Jacket - Anthracite/Sail=20
+( https://sneakerpolitics.com/products/nigel-sylvester-x-jordan-half-zip-ja=
+cket-anthracite-sail?syclid=3Dc7319c2e-f0b4-4c1c-a197-d800abd7c0ce&utm_camp=
+aign=3Dorder-confirmation-email&utm_content=3Dproduct&utm_medium=3Demail&ut=
+m_source=3DOrderlyEmails )
+
+
+M
+
+IQ8150-060|M
+
+x 1
+
+$150.00
+
+Nigel Sylvester x Jordan Half Zip Jacket - Anthracite/Sail - S=20
+( https://sneakerpolitics.com/products/nigel-sylvester-x-jordan-half-zip-ja=
+cket-anthracite-sail?syclid=3Dc4888e22-1776-4b34-854e-c4acf0b0da3b&utm_camp=
+aign=3Dorder-confirmation-email&utm_content=3Dproduct&utm_medium=3Demail&ut=
+m_source=3DOrderlyEmails )
+
+
+Nigel Sylvester x Jordan Half Zip Jacket - Anthracite/Sail=20
+( https://sneakerpolitics.com/products/nigel-sylvester-x-jordan-half-zip-ja=
+cket-anthracite-sail?syclid=3D8a49197f-85e4-4475-bfc3-74442f7744a9&utm_camp=
+aign=3Dorder-confirmation-email&utm_content=3Dproduct&utm_medium=3Demail&ut=
+m_source=3DOrderlyEmails )
+
+
+S
+
+IQ8150-060|S
+
+x 1
+
+$150.00
+
+Subtotal
+$450.00
+
+Flat Rate
+
+$15.00
+
+Total
+$465.00
+
+FAQ=20
+( https://sneakerpolitics.com/pages/faq?syclid=3Dfce51f81-7667-46e3-8a57-c7=
+b05820b857&utm_campaign=3Dorder-confirmation-email&utm_content=3Dcustom-lin=
+k&utm_medium=3Demail&utm_source=3DOrderlyEmails&utm_term=3Dfaq )
+
+
+Help
+Center ( https://sneakerpolitics.gorgias.help/en-US )
+
+Politics
+VIP Club=20
+( https://sneakerpolitics.com/pages/rewards?syclid=3Daf71c40a-591a-4c29-a2e=
+b-3d3b59237b15&utm_campaign=3Dorder-confirmation-email&utm_content=3Dcustom=
+-link&utm_medium=3Demail&utm_source=3DOrderlyEmails&utm_term=3Dpolitics-vip=
+-club )
+
+
+POLITICS=20
+( https://sneakerpolitics.com/collections/politics?syclid=3D1b5eaf1b-f7fa-4=
+bf5-a2bf-d32605ac8272&utm_campaign=3Dorder-confirmation-email&utm_content=
+=3Dsite-link&utm_medium=3Demail&utm_source=3DOrderlyEmails&utm_term=3Dpolit=
+ics )
+
+
+RELEASES=20
+( https://sneakerpolitics.com/blogs/releases?syclid=3D72d1f21a-11a0-4b26-b9=
+ef-a25e9e17655e&utm_campaign=3Dorder-confirmation-email&utm_content=3Dsite-=
+link&utm_medium=3Demail&utm_source=3DOrderlyEmails&utm_term=3Dreleases )
+
+
+LATEST=20
+( https://sneakerpolitics.com/collections/latest?syclid=3Dead856b2-7cc8-48f=
+f-aaf5-00ea329c3a22&utm_campaign=3Dorder-confirmation-email&utm_content=3Ds=
+ite-link&utm_medium=3Demail&utm_source=3DOrderlyEmails&utm_term=3Dlatest )
+
+
+SALE=20
+( https://sneakerpolitics.com/collections/sale?syclid=3D1bc9cefe-c538-41d5-=
+96a8-1ea77c20853d&utm_campaign=3Dorder-confirmation-email&utm_content=3Dsit=
+e-link&utm_medium=3Demail&utm_source=3DOrderlyEmails&utm_term=3Dsale )
+
+
+Sneaker Politics
+
+240
+Ridge Road
+
+Lafayette, LA 70506
+
+Copyright =C2=A9 2026
+
+FOLLOW
+
+Facebook ( https://www.facebook.com/sneakerpolitics )
+X.com
+( https://x.com/sneakerpolitics )
+Instagram ( https://www.instagram.com/sneakerpolitics/ )
+TikTok ( https://www.tiktok.com/@sneakerpolitics )
+--2114f9d8ef6e6af34ada40d8a17f362738c2bc14ac0f4cd56846428f6a88
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/html; charset=utf-8
+Mime-Version: 1.0
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w=
+3.org/TR/REC-html40/loose.dtd"><html><head>
+<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3DUTF-8"/>
+<style>@media only screen and (max-width:480px) {
+  th.column_logo {
+    text-align: left; display: block !important;
+  }
+  .logo-mobile-left {
+    margin: 0 auto 0 0 !important;
+  }
+  .logo-mobile-right {
+    margin: 0 0 0 auto !important;
+  }
+  .logo-mobile-center {
+    margin: 0 auto !important;
+  }
+  .email-container {
+    width: 100% !important; min-width: 100% !important;
+  }
+  h1 {
+    line-height: 1.4 !important;
+  }
+  h2 {
+    line-height: 1.4 !important;
+  }
+  h3 {
+    line-height: 1.4 !important;
+  }
+  img.fluid {
+    width: 100% !important; min-width: 100% !important; max-width: 100% !im=
+portant; height: auto !important; margin: auto !important; box-sizing: bord=
+er-box;
+  }
+  img.fluid-centered {
+    width: 100% !important; min-width: 100% !important; max-width: 100% !im=
+portant; height: auto !important; margin: auto !important; box-sizing: bord=
+er-box;
+  }
+  img.fluid-centered {
+    margin: auto !important;
+  }
+  th.stack-column {
+    display: block !important; width: 100% !important; min-width: 100% !imp=
+ortant; direction: ltr !important; box-sizing: border-box;
+  }
+  th.stack-column-left {
+    display: block !important; width: 100% !important; min-width: 100% !imp=
+ortant; direction: ltr !important; box-sizing: border-box;
+  }
+  th.stack-column-center {
+    display: block !important; width: 100% !important; min-width: 100% !imp=
+ortant; direction: ltr !important; box-sizing: border-box;
+  }
+  th.related_product_wrapper {
+    display: block !important; width: 100% !important; min-width: 100% !imp=
+ortant; direction: ltr !important; box-sizing: border-box;
+  }
+  .column_1_of_2 {
+    display: block !important; width: 100% !important; min-width: 100% !imp=
+ortant; direction: ltr !important; box-sizing: border-box;
+  }
+  .column_2_of_2 {
+    display: block !important; width: 100% !important; min-width: 100% !imp=
+ortant; direction: ltr !important; box-sizing: border-box;
+  }
+  th.stack-column-left {
+    text-align: left !important;
+  }
+  th.stack-column-center {
+    text-align: center !important; border-right: none !important; border-le=
+ft: none !important;
+  }
+  th.related_product_wrapper {
+    text-align: center !important; border-right: none !important; border-le=
+ft: none !important;
+  }
+  .column_button {
+    width: 100% !important; text-align: center !important; margin: 0 !impor=
+tant;
+  }
+  .column_button > table {
+    width: 100% !important; text-align: center !important; margin: 0 !impor=
+tant;
+  }
+  .column_button > table th {
+    width: 100% !important; text-align: center !important; margin: 0 !impor=
+tant;
+  }
+  .column_1_of_2 {
+    padding-bottom: 20px !important;
+  }
+  .column_1_of_2 th {
+    padding-right: 0 !important;
+  }
+  .column_2_of_2 th {
+    padding-left: 0 !important;
+  }
+  .column_text_after_button {
+    padding: 0 10px !important;
+  }
+  .section_border {
+    padding-right: 10px !important; padding-left: 10px !important;
+  }
+  .section_content {
+    padding-right: 20px !important; padding-left: 20px !important;
+  }
+  .section_content .section_content {
+    padding: 0 !important;
+  }
+  .recommended_products .section_content .related_products_title {
+    padding-right: 20px !important; padding-left: 20px !important;
+  }
+  .recommended_products .section_content {
+    padding-right: 0 !important; padding-left: 0 !important;
+  }
+  img.product-image {
+    width: 160px !important; max-width: 160px !important;
+  }
+  img.related_product_image {
+    width: 160px !important; max-width: 160px !important;
+  }
+  .column_1_of_2 th p {
+    text-align: left !important;
+  }
+  .column_2_of_2 th p {
+    text-align: left !important;
+  }
+  .order_notes * {
+    text-align: left !important;
+  }
+  .column_text_after_button {
+    text-align: left !important;
+  }
+  .column_text_after_button * {
+    text-align: left !important;
+  }
+  .line-item-description p {
+    text-align: left !important;
+  }
+  .line-item-price p {
+    text-align: right !important;
+  }
+  .line-item-qty p {
+    text-align: right !important;
+  }
+  .line-item-line-price p {
+    text-align: right !important;
+  }
+  h2 {
+    text-align: left !important;
+  }
+  h3 {
+    text-align: left !important;
+  }
+  .column_1_of_2 th {
+    text-align: left !important;
+  }
+  .column_2_of_2 th {
+    text-align: left !important;
+  }
+  td.order-table-title {
+    text-align: left !important;
+  }
+  tr.row-border-bottom th.product-image-wrapper {
+    border-bottom: none !important;
+  }
+  th.related_product_wrapper.first {
+    padding-right: 0 !important; padding-left: 0 !important;
+  }
+  th.related_product_wrapper.last {
+    padding-right: 0 !important; padding-left: 0 !important;
+  }
+  .text_banner th.banner_container {
+    padding: 10px !important;
+  }
+  .mobile_app_download .column_1_of_2 .image_container {
+    padding-bottom: 0 !important;
+  }
+  .mobile_app_download .column_2_of_2 .image_container {
+    padding-top: 0 !important;
+  }
+  .image_with_text th.column_1_of_2 {
+    padding: 20px !important; padding-bottom: 10px !important;
+  }
+  .image_with_text th.column_2_of_2 {
+    padding: 20px !important; padding-top: 10px !important;
+  }
+  .images_in_2_columns th.column_1_of_2 {
+    padding: 0 !important; padding-bottom: 10px !important;
+  }
+  .images_in_2_columns th.column_2_of_2 {
+    padding: 0 !important; padding-top: 10px !important;
+  }
+}
+@media only screen and (min-device-width: 375px) and (max-device-width: 413=
+px) {
+  .container {
+    min-width: 375px !important;
+  }
+}
+</style>
+</head>
+<body>
+
+ =20
+    <!--[if gte mso 15]>
+      <xml>
+        <o:OfficeDocumentSettings> <o:AllowPNG />
+            <o:PixelsPerInch>96</o:PixelsPerInch> </o:OfficeDocumentSetting=
+s>
+        </xml>
+    <![endif]-->
+    <meta name=3D"viewport" content=3D"width=3Ddevice-width"/>
+    <meta http-equiv=3D"X-UA-Compatible" content=3D"IE=3Dedge"/>
+    <meta name=3D"x-apple-disable-message-reformatting"/>
+    <meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3DUS-AS=
+CII"/>
+    <meta name=3D"color-scheme" content=3D"light"/>
+    <meta name=3D"supported-color-schemes" content=3D"light only"/>
+    <!-- Order confirmation email -->
+    <style type=3D"text/css" id=3D"base-premailer-ignore-css" data-premaile=
+r=3D"ignore">
+      /* What it does: Remove spaces around the email design added by some =
+email clients. */
+        /* Beware: It can remove the padding / Margin and add a background =
+color to the compose a reply window. */
+        html, body {
+          Margin: 0 auto !important;
+          padding: 0 !important;
+          width: 100% !important;
+        }
+        /* What it does: Stops email clients resizing small text. */
+        * {
+          -ms-text-size-adjust: 100%;
+          -webkit-text-size-adjust: 100%;
+          text-rendering: optimizeLegibility;
+        }
+        /* What it does: Forces Outlook.com to display emails full width. *=
+/
+        .ExternalClass {
+          width: 100%;
+        }
+        /* What is does: Centers email on Android 4.4 */
+        div[style*=3D"Margin: 16px 0"] {
+            Margin:0 !important;
+        }
+        /* What it does: Stops Outlook from adding extra spacing to tables.=
+ */
+        table,
+        th {
+          mso-table-lspace: 0pt;
+          mso-table-rspace: 0pt;
+        }
+        /* What it does: Fixes Outlook.com line height. */
+        .ExternalClass,
+        .ExternalClass * {
+          line-height: 100% !important;
+        }
+        /* What it does: Fixes webkit padding issue. Fix for Yahoo mail tab=
+le alignment bug. Applies table-layout to the first 2 tables then removes f=
+or anything nested deeper. */
+        table {
+          border-spacing: 0 !important;
+          border-collapse: collapse !important;
+          border: none;
+          Margin: 0 auto;
+          direction: ltr;
+        }
+        div[style*=3D"Margin: 16px 0"] {
+            Margin:0 !important;
+        }
+        /* What it does: Uses a better rendering method when resizing image=
+s in IE. */
+        img {
+          -ms-interpolation-mode:bicubic;
+        }
+        /* What it does: Overrides styles added when Yahoo's auto-senses a =
+link. */
+        .yshortcuts a {
+          border-bottom: none !important;
+        }
+        /* What it does: Overrides blue, underlined link auto-detected by i=
+OS Mail. */
+        /* Create a class for every link style needed; this template needs =
+only one for the link in the footer. */
+        /* What it does: A work-around for email clients meddling in trigge=
+red links. */
+        *[x-apple-data-detectors],  /* iOS */
+        .x-gmail-data-detectors,    /* Gmail */
+        .x-gmail-data-detectors *,
+        .aBn {
+            border-bottom: none !important;
+            cursor: default !important;
+            color: inherit !important;
+            text-decoration: none !important;
+            font-size: inherit !important;
+            font-family: inherit !important;
+            font-weight: inherit !important;
+            line-height: inherit !important;
+        }
+        /* What it does: Overrides blue, underlined link auto-detected by G=
+mail. */
+        u + #body a {
+            color: inherit;
+            text-decoration: none;
+            font-size: inherit;
+            font-family: inherit;
+            font-weight: inherit;
+            line-height: inherit;
+        }
+     =20
+        /* What it does: Prevents Gmail from displaying an download button =
+on large, non-linked images. */
+        .a6S {
+            display: none !important;
+            opacity: 0.01 !important;
+        }
+        /* If the above doesn't work, add a .g-img class to any image in qu=
+estion. */
+        img.g-img + div {
+            display:none !important;
+        }
+        /* What it does: Prevents underlining the button text in Windows 10=
+ */
+        a,
+        a:link,
+        a:visited {
+            color: #1d1d1d;
+            text-decoration: none !important;
+        }
+        .header a {
+            color: #c5c5c5;
+            text-decoration: none;
+            text-underline: none;
+        }
+        .main a {
+            color: #1d1d1d;
+            text-decoration: none;
+            text-underline: none;
+            word-wrap: break-word;
+        }
+        .main .section.customer_and_shipping_address a,
+        .main .section.shipping_address_and_fulfillment_details a {
+            color: #000000;
+            text-decoration: none;
+            text-underline: none;
+            word-wrap: break-word;
+        }
+        .footer a {
+            color: #000000;
+            text-transform: uppercase;
+            text-decoration: none;
+            text-underline: none;
+        }
+     =20
+        /* What it does: Overrides styles added images. */
+        img {
+          border: none !important;
+          outline: none !important;
+          text-decoration:none !important;
+        }
+    </style>
+    <!--[if (mso)|(mso 16)]>
+      <style type=3D"text/css" data-premailer=3D"ignore">
+        a {text-decoration: none;}
+      </style>
+    <![endif]-->
+    <!--[if gte mso 9]>
+      <style>
+        li {
+              text-indent: -1em; /* Normalise space between bullets and tex=
+t */
+            }
+      </style>
+    <![endif]-->
+    <style type=3D"text/css" data-premailer=3D"ignore">
+      /* Section specific premailer ignores */
+        td.menu_bar_1 a:hover,
+        td.menu_bar_6 a:hover {
+          color: #1d1d1d !important;
+        }
+        th.related_product_wrapper.first {
+          border-right: 10px solid #ffffff;
+        }
+        th.related_product_wrapper.last {
+          border-left: 10px solid #ffffff;
+        }
+    </style>
+    <!--[if !mso]><!-->
+  <style type=3D"text/css" id=3D"google-fonts-css" data-premailer=3D"ignore=
+">
+    @import url("https://fonts.googleapis.com/css?family=3D&subset=3Dlatin-=
+ext");
+    /* What it does: Fixes fonts for Google WebFonts in non-Outlook clients=
+ */
+    [style*=3D"Arial"] {
+      font-family: 'Arial',-apple-system,BlinkMacSystemFont,'Segoe UI',Aria=
+l,sans-serif !important;
+    }
+    [style*=3D"Arial"] {
+      font-family: 'Arial',-apple-system,BlinkMacSystemFont,'Segoe UI',Aria=
+l,sans-serif !important;
+    }
+    [style*=3D"Arial"] {
+      font-family: 'Arial',-apple-system,BlinkMacSystemFont,'Segoe UI',Aria=
+l,sans-serif !important;
+    }
+    [style*=3D"Arial"] {
+      font-family: 'Arial',-apple-system,BlinkMacSystemFont,'Segoe UI',Aria=
+l,sans-serif !important;
+    }
+  </style>
+<!--<![endif]-->
+     =20
+     =20
+     =20
+   =20
+   =20
+      <!--[if !mso 9]><!-->
+      <div style=3D"display: none; overflow: hidden; line-height: 1px; max-=
+height: 0px; max-width: 0px; opacity: 0; mso-hide: all;">Thank you for your=
+ purchase, this email confirms your order. We will send you another email a=
+s soon as your order is on its way.
+      </div>
+      <div id=3D"custom-preview-text" style=3D"display: none; overflow: hid=
+den; line-height: 1px; max-height: 0px; max-width: 0px; opacity: 0; mso-hid=
+e: all;">=CD=8F=E2=80=8C=C2=A0=CD=8F=E2=80=8C=C2=A0=CD=8F=E2=80=8C=C2=A0=CD=
+=8F=E2=80=8C=C2=A0=CD=8F=E2=80=8C=C2=A0=CD=8F=E2=80=8C=C2=A0=CD=8F=E2=80=8C=
+=C2=A0=CD=8F=E2=80=8C=C2=A0=CD=8F=E2=80=8C=C2=A0=CD=8F=E2=80=8C=C2=A0=CD=8F=
+=E2=80=8C=C2=A0=CD=8F=E2=80=8C=C2=A0=CD=8F=E2=80=8C=C2=A0=CD=8F=E2=80=8C=C2=
+=A0=CD=8F=E2=80=8C=C2=A0=CD=8F=E2=80=8C=C2=A0=CD=8F=E2=80=8C=C2=A0=CD=8F=E2=
+=80=8C=C2=A0=CD=8F=E2=80=8C=C2=A0=CD=8F=E2=80=8C=C2=A0=CD=8F=E2=80=8C=C2=A0=
+=CD=8F=E2=80=8C=C2=A0=CD=8F=E2=80=8C=C2=A0=CD=8F=E2=80=8C=C2=A0=CD=8F=E2=80=
+=8C=C2=A0=CD=8F=E2=80=8C=C2=A0</div>
+      <!--<![endif]-->
+       =20
+         =20
+            <!-- PARIS -->
+            <!-- BEGIN: CONTAINER -->
+            <table class=3D"container container_header" cellpadding=3D"0" c=
+ellspacing=3D"0" border=3D"0" width=3D"100%" style=3D"border-collapse: coll=
+apse; min-width: 100%; direction: ltr;" role=3D"presentation" bgcolor=3D"#f=
+fffff">
+              <tbody>
+                <tr>
+                  <th valign=3D"top" style=3D"mso-line-height-rule: exactly=
+;">
+                    <center style=3D"width: 100%;">
+                      <table border=3D"0" width=3D"600" cellpadding=3D"0" c=
+ellspacing=3D"0" align=3D"center" style=3D"width: 600px; min-width: 600px; =
+max-width: 600px; direction: ltr; margin: auto;" class=3D"email-container" =
+role=3D"presentation">
+                        <tbody>
+                          <tr>
+                            <th valign=3D"top" class=3D"container_border" s=
+tyle=3D"mso-line-height-rule: exactly;">
+                              <!-- BEGIN : SECTION : HEADER -->
+                              <table class=3D"sections_container header" da=
+ta-id=3D"header" id=3D"section-header" border=3D"0" width=3D"100%" cellpadd=
+ing=3D"0" cellspacing=3D"0" align=3D"center" style=3D"min-width: 100%; dire=
+ction: ltr;" role=3D"presentation" bgcolor=3D"#ffffff">
+                                <tbody><tr>
+                                  <td class=3D"" style=3D"mso-line-height-r=
+ule: exactly;" bgcolor=3D"#ffffff">
+                                    <table border=3D"0" width=3D"100%" cell=
+padding=3D"0" cellspacing=3D"0" align=3D"center" style=3D"min-width: 100%; =
+direction: ltr;" role=3D"presentation">
+                                      <tbody><tr>
+                                        <th class=3D"section_border" style=
+=3D"mso-line-height-rule: exactly; padding: 20px 20px 0px;" bgcolor=3D"#fff=
+fff">
+                                          <table border=3D"0" width=3D"100%=
+" cellpadding=3D"0" cellspacing=3D"0" align=3D"center" style=3D"min-width: =
+100%; direction: ltr;" role=3D"presentation">
+                                            <tbody><tr>
+                                              <th class=3D"column_logo sect=
+ion_content" style=3D"mso-line-height-rule: exactly; padding: 5px 20px;" al=
+ign=3D"left" bgcolor=3D"#ffffff">
+                                                <!-- Logo : BEGIN -->
+                                                <a data-container-width=3D"=
+240 600" href=3D"https://sneakerpolitics.com/_t/c/v3/AAC_sNs1E-PLmX1CmTYw0P=
+N5hdmdHEMXseywTpJg87FZq8qfQqa3_XP8nxgo62zQMI8Tlpqwg9u5uRYjb3Orr70eeDjO1Kc4c=
+XLG8lWEpHqF_GPa7OKvFq-01XTtBzU_divbD64rOgxRBcdzd1cbtYIGXO5Iu3ABWl9lYkmaOvOo=
+Ezw-EB2BASO47zWmHDMG6A28wevMHeDtuljghaqVJoBBNDBU4LJphZlx7oy61FGgdc0fW-cL4IR=
+caE4BAJ91PssdX1jqwuoru7dAth1F0UIIskl8WY6JkNw4wicNIgF3rJTGOLWMXi4yZYLByvRbA_=
+07bKw97KIQSPo9Hp2xjG0Jm-G5aWb2X9eAr-CLlOUQcaa8zWOOyta5DdNXVCfk1gDp1a3e_3K6t=
+5261YNDgR37p3hGs0yc7ARk0dK5rG2FwNAewY7bJDXj6rbXM60G10KhQiq0ZD2eVLmgXG_oaam5=
+2CUnecZ6HaB6eTId6WNgbC4c-eyftA=3D=3D" target=3D"_blank" style=3D"color: #c5=
+c5c5; text-decoration: none !important; text-underline: none;">
+                                                  <img src=3D"https://cdn.o=
+rderlyemails.com/assets/templates/48311/Asset%209@300x.png" class=3D"logo l=
+ogo-left logo-mobile-left " width=3D"120" border=3D"0" style=3D"width: 120p=
+x; height: auto !important; display: block; margin: 0 auto 0 0;"/>
+                                                </a>
+                                                <!-- Logo : END -->
+                                              </th>
+                                            </tr>
+                                          </tbody></table>
+                                        </th>
+                                      </tr>
+                                    </tbody></table>
+                                  </td>
+                                </tr>
+                              </tbody></table>
+                              <!-- END : SECTION : HEADER -->
+                            </th>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </center>
+                  </th>
+                </tr>
+              </tbody>
+            </table>
+            <!-- END : CONTAINER -->
+            <!-- BEGIN: CONTAINER -->
+            <table class=3D"container container_main" cellpadding=3D"0" cel=
+lspacing=3D"0" border=3D"0" width=3D"100%" style=3D"border-collapse: collap=
+se; min-width: 100%; direction: ltr;" role=3D"presentation" bgcolor=3D"#fff=
+fff">
+              <tbody>
+                <tr>
+                  <th valign=3D"top" style=3D"mso-line-height-rule: exactly=
+;">
+                    <center style=3D"width: 100%;">
+                      <table border=3D"0" width=3D"600" cellpadding=3D"0" c=
+ellspacing=3D"0" align=3D"center" style=3D"width: 600px; min-width: 600px; =
+max-width: 600px; direction: ltr; margin: auto;" class=3D"email-container" =
+role=3D"presentation">
+                        <tbody>
+                          <tr>
+                            <th valign=3D"top" class=3D"container_border" s=
+tyle=3D"mso-line-height-rule: exactly;">
+                              <!-- BEGIN : SECTION : MAIN -->
+                              <table class=3D"sections_container main" data=
+-id=3D"main" id=3D"section-main" border=3D"0" width=3D"100%" cellpadding=3D=
+"0" cellspacing=3D"0" align=3D"center" style=3D"min-width: 100%; direction:=
+ ltr;" role=3D"presentation" bgcolor=3D"#ffffff">
+                                <tbody><tr>
+                                  <td class=3D"" style=3D"mso-line-height-r=
+ule: exactly;" bgcolor=3D"#ffffff">
+                                    <table border=3D"0" width=3D"100%" cell=
+padding=3D"0" cellspacing=3D"0" align=3D"center" style=3D"min-width: 100%; =
+direction: ltr;" id=3D"mixContainer" role=3D"presentation">
+                                      <!-- BEGIN SECTION: Heading -->
+                                      <tbody><tr id=3D"section-33145327" cl=
+ass=3D"section heading">
+                                        <th class=3D"section_border" style=
+=3D"mso-line-height-rule: exactly; padding: 20px 20px 5px;" bgcolor=3D"#fff=
+fff">
+                                          <table border=3D"0" width=3D"100%=
+" cellpadding=3D"0" cellspacing=3D"0" align=3D"center" style=3D"min-width: =
+100%; direction: ltr;" role=3D"presentation">
+                                            <tbody><tr>
+                                              <th class=3D"section_content"=
+ style=3D"mso-line-height-rule: exactly; padding: 5px 20px;" bgcolor=3D"#ff=
+ffff" valign=3D"top">
+                                                <table cellspacing=3D"0" ce=
+llpadding=3D"0" border=3D"0" width=3D"100%" role=3D"presentation" style=3D"=
+direction: ltr;">
+                                                  <tbody><tr>
+                                                    <th style=3D"mso-line-h=
+eight-rule: exactly;" bgcolor=3D"#ffffff" valign=3D"top">
+                                                      <h1 data-key=3D"33145=
+327_heading" style=3D"font-family: &#39;Arial&#39;,-apple-system,BlinkMacSy=
+stemFont,&#39;Segoe UI&#39;,Arial,sans-serif; font-size: 24px; line-height:=
+ 22px; padding-top: 5px; padding-bottom: 5px; font-weight: 900; color: #222=
+222; text-transform: uppercase; margin: 0;" align=3D"left">Order Confirmati=
+on</h1>
+                                                    </th>
+                                                  </tr>
+                                                </tbody></table>
+                                              </th>
+                                            </tr>
+                                          </tbody></table>
+                                        </th>
+                                      </tr>
+                                      <!-- END SECTION: Heading -->
+                                      <!-- BEGIN SECTION: Order Number And =
+Date -->
+                                      <tr id=3D"section-33145329" class=3D"=
+section order_number_and_date">
+                                        <th class=3D"section_border" style=
+=3D"mso-line-height-rule: exactly; padding: 5px 20px;" bgcolor=3D"#ffffff">
+                                          <table border=3D"0" width=3D"100%=
+" cellpadding=3D"0" cellspacing=3D"0" align=3D"center" style=3D"min-width: =
+100%; direction: ltr;" role=3D"presentation">
+                                            <tbody><tr>
+                                              <th class=3D"section_content"=
+ style=3D"mso-line-height-rule: exactly; padding: 5px 20px;" bgcolor=3D"#ff=
+ffff" valign=3D"top">
+                                               =20
+                                                  <h3 style=3D"font-family:=
+ &#39;Arial&#39;,-apple-system,BlinkMacSystemFont,&#39;Segoe UI&#39;,Arial,=
+sans-serif; color: #1d1d1d; font-size: 16px; line-height: 22px; font-weight=
+: 700; text-transform: uppercase; margin: 0;" align=3D"left">
+                                                    <span data-key=3D"33145=
+329_order_number">Order</span> #737123
+                                                  </h3>
+                                                  <p class=3D"muted" style=
+=3D"mso-line-height-rule: exactly; direction: ltr; font-family: &#39;Arial&=
+#39;,-apple-system,BlinkMacSystemFont,&#39;Segoe UI&#39;,Arial,sans-serif; =
+font-size: 12px; line-height: 20px; font-weight: normal; text-transform: no=
+ne; color: #000000; margin: 0;" align=3D"left">May 24, 2026</p>
+                                               =20
+                                              </th>
+                                            </tr>
+                                          </tbody></table>
+                                        </th>
+                                      </tr>
+                                      <!-- END SECTION: Order Number And Da=
+te -->
+                                      <!-- BEGIN SECTION: Introduction -->
+                                      <tr id=3D"section-33145328" class=3D"=
+section introduction">
+                                        <th class=3D"section_border" style=
+=3D"mso-line-height-rule: exactly; padding: 5px 20px;" bgcolor=3D"#ffffff">
+                                          <table border=3D"0" width=3D"100%=
+" cellpadding=3D"0" cellspacing=3D"0" align=3D"center" style=3D"min-width: =
+100%; direction: ltr;" role=3D"presentation">
+                                            <tbody><tr>
+                                              <th class=3D"section_content"=
+ style=3D"mso-line-height-rule: exactly; padding: 5px 20px;" bgcolor=3D"#ff=
+ffff" valign=3D"top">
+                                               =20
+                                                  <p style=3D"mso-line-heig=
+ht-rule: exactly; direction: ltr; font-family: &#39;Arial&#39;,-apple-syste=
+m,BlinkMacSystemFont,&#39;Segoe UI&#39;,Arial,sans-serif; font-size: 14px; =
+line-height: 20px; font-weight: 400; text-transform: none; color: #000000; =
+margin: 0;" align=3D"left">
+                                                    <span data-key=3D"33145=
+328_greeting_text" style=3D"text-align: left; direction: ltr; font-family: =
+&#39;Arial&#39;,-apple-system,BlinkMacSystemFont,&#39;Segoe UI&#39;,Arial,s=
+ans-serif; font-size: 14px; line-height: 20px; font-weight: 400; text-trans=
+form: none; color: #000000;">
+                                                      Hey
+                                                    </span>
+                                                    Alex,
+                                                  </p>
+                                               =20
+                                                <span data-key=3D"33145328_=
+introduction_text" class=3D"text" style=3D"text-align: left; direction: ltr=
+; font-family: &#39;Arial&#39;,-apple-system,BlinkMacSystemFont,&#39;Segoe =
+UI&#39;,Arial,sans-serif; font-size: 14px; line-height: 20px; font-weight: =
+400; text-transform: none; color: #000000;">
+                                                  <p style=3D"mso-line-heig=
+ht-rule: exactly; direction: ltr; font-family: &#39;Arial&#39;,-apple-syste=
+m,BlinkMacSystemFont,&#39;Segoe UI&#39;,Arial,sans-serif; font-size: 14px; =
+line-height: 20px; font-weight: 400; text-transform: none; color: #000000; =
+margin: 10px 0 0;" align=3D"left">Thank you for your purchase, this email c=
+onfirms your order. We will send you another email as soon as your order is=
+ on its way.</p>
+                                                </span>
+                                              </th>
+                                            </tr>
+                                          </tbody></table>
+                                        </th>
+                                      </tr>
+                                      <!-- END SECTION: Introduction -->
+                                      <!-- BEGIN SECTION: Order Status Butt=
+on -->
+                                      <tr id=3D"section-33145332" class=3D"=
+section order_status_button">
+                                        <th class=3D"section_border" style=
+=3D"mso-line-height-rule: exactly; padding: 0 20px 5px;" bgcolor=3D"#ffffff=
+">
+                                          <table border=3D"0" width=3D"100%=
+" cellpadding=3D"0" cellspacing=3D"0" align=3D"center" style=3D"min-width: =
+100%; direction: ltr;" role=3D"presentation">
+                                            <tbody><tr>
+                                              <th class=3D"section_content"=
+ style=3D"mso-line-height-rule: exactly; padding: 5px 20px;" bgcolor=3D"#ff=
+ffff" valign=3D"top">
+                                                <table cellspacing=3D"0" ce=
+llpadding=3D"0" border=3D"0" width=3D"100%" style=3D"direction: ltr;">
+                                                  <!-- Button : BEGIN -->
+                                                  <tbody><tr>
+                                                    <th class=3D"sides colu=
+mn_button button5" style=3D"mso-line-height-rule: exactly; margin: 0; paddi=
+ng: 10px 0;" align=3D"left" bgcolor=3D"#ffffff" valign=3D"top">
+                                                      <table cellspacing=3D=
+"0" cellpadding=3D"0" border=3D"0" class=3D"button" role=3D"presentation" s=
+tyle=3D"direction: ltr; text-align: left; margin: auto 0;" bgcolor=3D"trans=
+parent">
+                                                        <tbody><tr>
+                                                          <th class=3D"butt=
+on-inner" style=3D"mso-line-height-rule: exactly; border-radius: 1px;" alig=
+n=3D"center" bgcolor=3D"#1d1d1d" valign=3D"top">
+                                                            <a class=3D"but=
+ton-link" href=3D"https://sneakerpolitics.com/_t/c/v3/AABeQq8pzjfOePifvMn_p=
+eKkRLpGonLh5wzmmp6cldXeEsQYYmzRGLOKhydugANARz_aZsDuORRWGPF-Qpb0_zlU_VvlSWw2=
+9rKz8seORlifwx9BReq2ffFRAIuB1pMLjKRkorjc7d6FK6kf8cc7B13ZQ1ZiV-n6mKmwNAKKN2A=
+y7hnELNE7P1ihuTesuD-LaBdjt1nribuF9ghoKPETV9JBRZHTH1yGcS1yzsMUQnrpTudCHMB-l2=
+dH7Sv2Gzc8pD4ESlHLl5OxlWyWRmCi4PGJIumTg1Bn5dq46qAxePOvcBDFTF_n9ZCcF4s97Pgia=
+N48vHcSWj3YSAFOy2xPSjSmc5aDVL4IHVZAVbuMhWLgiZPCO4U3qEnl_ejiT3rIcOQh9qwC0UX-=
+euF0xJTpq3bBqU8s1HckokBw_3i5p9ezURuUmTjNVqPg8oMBiSs-b-F30kpnunC_3HMv_yH18TC=
+3CwHN3VjvWluupZGxVS8XlBx6_0Uf75Z4T5vBaQRa5VFB9gzCQ2XCxbI2Jnm6pGXD_vU7Gp-6f9=
+LS2F7n2N3XcZ7CMDOJ46HhoLLrhb4yTlUb1Y1dj2-paHsCudoT9O0ba9d0U8Sz65Y6LZ-1ZWU4C=
+cVVzz3B1lm7Sz4Gs6B939W6I-tbU5LLLVQjOvGOp18YthQmcYbxF9RTcbyKQYs8x8f2sT3A1IA7=
+5OW_NJpjfiK-XTn3dBcwwN4EYGozP7td-L4p_zD2ueO38iwdT530UuBVqbUShfZ6KKEiC_XEdns=
+dkZ7peQcjQzhwVQPFc4UO4Bz4LWV4frjjOejQqw3MLIeKHovw6Nt8Wk769r2P85coGT1vwlqU0z=
+Aq3Ekx7HktVYbj3FoOor-XC2EsbEIsMy_btEw0brX0LVXgjT2BTJ1IUNz3lD-6OlIZwiM-ZXUko=
+7BBp5SvSfxj7YaYU3fboscfHcu8pFeIP29IvRWWakNAxJuqxbWcNprmqVx3vtsJSlWkPYiti70T=
+b-Bm-uzLoH4_S3RUbHYeIoi6I0uh6vrm60gvo9GENCZ8u6VKlamiYw1fs5VvxuVcz_hvxrumz3H=
+d3zsJe_K8udNypUUgxUwLsPi2_5eOqdit-L9yoQ4cPYsG5yJ8qTEbvG3NwQXcPz6WQ3gdbxo-Hn=
+5yvGZBLxuKTdEmok9QmCpFZlV8EPtOPt94yS7kmRqtG7nTAI6jryat4DJ83U_XJxdfjGU2yLGf9=
+nLsaSwQ1Yii0264zdh2oTtXMWJaRxbn4CHgH173_gt5Hs4C-CNvYYorLFVdrShzXrWdyKOc-WTx=
+NdB1oyDYAszV2gizU9JAa15PCoY4hHTRSmu2i6c3T_Rw4JExZSL1-zyirYoTEB14Q9_JLcHF1Dk=
+APuBKcIHGhtsEX_I4q8Ssd0KyIj0CMohcg35f2InnVbS61AU_pnUlB9M2XgLgKY4Pvff0jauuU-=
+soRwJhJkQX0OorapJSBqFQfSSkkeD5aoep1tySpGLmMYNjsm1tiV4rSUnovzbqGqjjxs37VlXSJ=
+iqh_ndHuV-il9pU" target=3D"_blank" style=3D"color: #ffffff !important; text=
+-decoration: none !important; text-underline: none; word-wrap: break-word; =
+line-height: 14px; font-family: &#39;Arial&#39;,-apple-system,BlinkMacSyste=
+mFont,&#39;Segoe UI&#39;,Arial,sans-serif; font-size: 14px; font-weight: 70=
+0; text-transform: uppercase; text-align: center; display: block; backgroun=
+d-color: #1d1d1d; border-radius: 1px; padding: 1px 20px; border: 15px solid=
+ #1d1d1d;"><span class=3D"text-on-button" style=3D"line-height: 14px; color=
+: #ffffff; font-weight: 700; text-decoration: none; text-underline: none; l=
+etter-spacing: 0.5px;"><!--[if mso]>=C2=A0=C2=A0=C2=A0=C2=A0<![endif]--><sp=
+an class=3D"text-on-button-inner" data-key=3D"33145332_text_on_button" styl=
+e=3D"line-height: 14px; color: #ffffff; font-weight: 700; text-decoration: =
+none; text-underline: none; letter-spacing: 0.5px;">View Order</span><!--[i=
+f mso]>=C2=A0=C2=A0=C2=A0=C2=A0<![endif]--></span></a>
+                                                          </th>
+                                                        </tr>
+                                                      </tbody></table>
+                                                    </th>
+                                                  </tr>
+                                                  <!-- Button : END -->
+                                                </tbody></table>
+                                              </th>
+                                            </tr>
+                                          </tbody></table>
+                                        </th>
+                                      </tr>
+                                      <!-- END SECTION: Order Status Button=
+ -->
+                                      <!-- BEGIN SECTION: Customer And Ship=
+ping Address -->
+                                      <tr id=3D"section-33145330" class=3D"=
+section customer_and_shipping_address">
+                                        <th class=3D"section_border" style=
+=3D"mso-line-height-rule: exactly; padding: 5px 20px;" bgcolor=3D"#ffffff">
+                                          <table border=3D"0" width=3D"100%=
+" cellpadding=3D"0" cellspacing=3D"0" align=3D"center" style=3D"min-width: =
+100%; direction: ltr;" role=3D"presentation">
+                                            <tbody><tr>
+                                             =20
+                                                <!-- BEGIN : 2 COLUMNS : BI=
+LL_TO -->
+                                                <th class=3D"section_conten=
+t" style=3D"mso-line-height-rule: exactly; padding: 5px 20px;" bgcolor=3D"#=
+ffffff" valign=3D"top">
+                                                  <table border=3D"0" width=
+=3D"100%" cellpadding=3D"0" cellspacing=3D"0" align=3D"center" style=3D"min=
+-width: 100%; direction: ltr;" role=3D"presentation">
+                                                    <tbody><tr>
+                                                      <!-- BEGIN : Column 1=
+ of 2 : BILL_TO -->
+                                                      <th width=3D"50%" cla=
+ss=3D"column_1_of_2 column_bill_to " style=3D"mso-line-height-rule: exactly=
+;" align=3D"left" bgcolor=3D"#ffffff" valign=3D"top">
+                                                        <table align=3D"cen=
+ter" border=3D"0" width=3D"100%" cellpadding=3D"0" cellspacing=3D"0" style=
+=3D"min-width: 100%; direction: ltr;" role=3D"presentation">
+                                                         =20
+                                                           =20
+                                                              <tbody><tr>
+                                                                <th style=
+=3D"mso-line-height-rule: exactly; padding-right: 10px;" align=3D"left" bgc=
+olor=3D"#ffffff" valign=3D"top">
+                                                                  <h3 data-=
+key=3D"33145330_bill_to" style=3D"font-family: &#39;Arial&#39;,-apple-syste=
+m,BlinkMacSystemFont,&#39;Segoe UI&#39;,Arial,sans-serif; color: #1d1d1d; f=
+ont-size: 16px; line-height: 22px; font-weight: 700; text-transform: upperc=
+ase; margin: 0;" align=3D"left">Customer</h3>
+                                                                </th>
+                                                              </tr>
+                                                           =20
+                                                            <tr>
+                                                              <th class=3D"=
+billing_address " style=3D"mso-line-height-rule: exactly; padding-right: 10=
+px;" align=3D"left" bgcolor=3D"#ffffff" valign=3D"top">
+<p style=3D"mso-line-height-rule: exactly; direction: ltr; font-family: &#3=
+9;Arial&#39;,-apple-system,BlinkMacSystemFont,&#39;Segoe UI&#39;,Arial,sans=
+-serif; font-size: 14px; line-height: 20px; font-weight: 400; text-transfor=
+m: none; color: #000000; margin: 0;" align=3D"left">Alex Farben-Griggs<br/>=
+491 Barrington drive<br/>Potsdam, NY 13676<br/>United States<br/></p>
+                                                              </th>
+                                                            </tr>
+                                                         =20
+                                                        </tbody></table>
+                                                      </th>
+                                                      <!-- END : Column 1 o=
+f 2 : BILL_TO -->
+                                                      <!-- BEGIN : Column 2=
+ of 2 : SHIP_TO -->
+                                                      <th width=3D"50%" cla=
+ss=3D"column_2_of_2 column_ship_to " style=3D"mso-line-height-rule: exactly=
+;" align=3D"left" bgcolor=3D"#ffffff" valign=3D"top">
+                                                        <table align=3D"cen=
+ter" border=3D"0" width=3D"100%" cellpadding=3D"0" cellspacing=3D"0" style=
+=3D"min-width: 100%; direction: ltr;" role=3D"presentation">
+                                                         =20
+                                                           =20
+                                                              <tbody><tr>
+                                                                <th style=
+=3D"mso-line-height-rule: exactly; padding-left: 10px;" align=3D"left" bgco=
+lor=3D"#ffffff" valign=3D"top">
+                                                                  <h3 data-=
+key=3D"33145330_ship_to" style=3D"font-family: &#39;Arial&#39;,-apple-syste=
+m,BlinkMacSystemFont,&#39;Segoe UI&#39;,Arial,sans-serif; color: #1d1d1d; f=
+ont-size: 16px; line-height: 22px; font-weight: 700; text-transform: upperc=
+ase; margin: 0;" align=3D"left">Shipping Address</h3>
+                                                                </th>
+                                                              </tr>
+                                                              <tr>
+                                                                <th class=
+=3D"shipping_address " style=3D"mso-line-height-rule: exactly; padding-left=
+: 10px;" align=3D"left" bgcolor=3D"#ffffff" valign=3D"top">
+                                                                  <p style=
+=3D"mso-line-height-rule: exactly; direction: ltr; font-family: &#39;Arial&=
+#39;,-apple-system,BlinkMacSystemFont,&#39;Segoe UI&#39;,Arial,sans-serif; =
+font-size: 14px; line-height: 20px; font-weight: 400; text-transform: none;=
+ color: #000000; margin: 0;" align=3D"left">Alex Farben-Griggs<br/>1709 Imp=
+erial Way<br/>UFXB<br/>West Deptford, NJ 08066<br/>United States<br/></p>
+                                                                </th>
+                                                              </tr>
+                                                             =20
+                                                           =20
+                                                         =20
+                                                        </tbody></table>
+                                                      </th>
+                                                      <!-- END : Column 2 o=
+f 2 : SHIP_TO -->
+                                                    </tr>
+                                                  </tbody></table>
+                                                </th>
+                                                <!-- END : 2 COLUMNS : SHIP=
+_TO -->
+                                              </tr>
+                                            </tbody></table>
+                                          </th>
+                                        </tr>
+                                        <!-- END SECTION: Customer And Ship=
+ping Address -->
+                                        <!-- BEGIN SECTION: Products With P=
+ricing -->
+                                        <tr id=3D"section-33145333" class=
+=3D"section products_with_pricing">
+                                          <th class=3D"section_border" styl=
+e=3D"mso-line-height-rule: exactly; padding: 5px 20px;" bgcolor=3D"#ffffff"=
+>
+                                            <table border=3D"0" width=3D"10=
+0%" cellpadding=3D"0" cellspacing=3D"0" align=3D"center" style=3D"min-width=
+: 100%; direction: ltr;" role=3D"presentation">
+                                              <tbody><tr>
+                                               =20
+                                                  <!-- Bold 1 -->
+                                                 =20
+                                                 =20
+                                                  <!-- end Bold 1 -->
+                                                  <th class=3D"section_cont=
+ent" style=3D"mso-line-height-rule: exactly; padding: 5px 20px;" bgcolor=3D=
+"#ffffff" valign=3D"top">
+                                                    <table class=3D"table_i=
+nner" cellspacing=3D"0" cellpadding=3D"0" border=3D"0" width=3D"100%" style=
+=3D"min-width: 100%; direction: ltr;" role=3D"presentation">
+                                                      <tbody><tr>
+                                                        <th class=3D"produc=
+t_table  table_content" style=3D"mso-line-height-rule: exactly; padding-top=
+: 5px; padding-bottom: 5px;" bgcolor=3D"#ffffff" valign=3D"top">
+                                                          <table cellspacin=
+g=3D"0" cellpadding=3D"0" border=3D"0" width=3D"100%" style=3D"min-width: 1=
+00%; direction: ltr;" role=3D"presentation">
+                                                            <tbody><tr>
+                                                              <th colspan=
+=3D"2" class=3D"table_main_title" style=3D"mso-line-height-rule: exactly;" =
+bgcolor=3D"#ffffff" valign=3D"top">
+                                                                <h3 data-ke=
+y=3D"33145333_item" style=3D"font-family: &#39;Arial&#39;,-apple-system,Bli=
+nkMacSystemFont,&#39;Segoe UI&#39;,Arial,sans-serif; color: #1d1d1d; font-s=
+ize: 16px; line-height: 22px; font-weight: 700; text-transform: uppercase; =
+border-bottom-width: 1px; border-bottom-color: #000000; border-bottom-style=
+: solid; margin: 0;" align=3D"left">ITEMS</h3>
+                                                              </th>
+                                                            </tr>
+                                                           =20
+                                                             =20
+<!-- Bold 2 -->
+                                                               =20
+                                                               =20
+                                                               =20
+                                                               =20
+                                                               =20
+                                                                 =20
+                                                                 =20
+                                                               =20
+                                                                <!-- end Bo=
+ld 2 -->
+                                                                <tr class=
+=3D"row-border-bottom">
+                                                                  <th class=
+=3D"table-stack product-image-wrapper stack-column-center" width=3D"1" styl=
+e=3D"mso-line-height-rule: exactly; border-bottom-width: 1px; border-bottom=
+-color: #000000; border-bottom-style: solid; padding-top: 10px; padding-bot=
+tom: 10px; padding-right: 10px;" bgcolor=3D"#ffffff" valign=3D"middle">
+                                                                   =20
+                                                                      <a hr=
+ef=3D"https://sneakerpolitics.com/_t/c/v3/AACHTmW0Jp0G-ajzX9duPPUJfGAGi41w5=
+nntqd1a2gibJmkrF4w1BNMQR4g18rc4UCG6Dz0pmzxPd4tcP7m2fa9EQi4evGUJumVmqp8HZ7AW=
+baET6du2mPTsMKmYlxH92oJuBcoTyH9DhjZc412MMzbxdWInjOHK_-p_81WkaKd6nxDfAgyRsli=
+yitC3DZRo6KpbT1SDMFuYS-i5RKvk8NC51WVQZ4dmV9ivZKdM7qwHvvk8ykhUgvi_1o92AbvDyc=
+qMYkxYeWn8RVSI9GPuUuFsJsz8UwMwPO_7DQjxlWNBXcggNIub_yT1_UGD5iZixoIbBy3uYbIgf=
+8BAiYidk9_0nOQAG6cDwbxEo2Ea6Pgv5U5feeL-PHyVz1O8nhLFJIOKHjm636dpxzUG3xUQ5OYE=
+hHRbEbfqdBV8iuZBTkmPb6fSt7YfLahuCL-OCzeRLF9UNtyzWgqCsCbURKiZtb4dchIg3GBNNxG=
+RFX-51AD8I9_X0QF7U-JfPrZlbkCyXnsYArqNsJHMh7zh_rBVrJ6f-fa5dzk4ttLgZ-_HELPEOl=
+ErHpgQJoighn2gA_iCH_Gq_Im_sap26z5-8g=3D=3D" class=3D"product_link" target=
+=3D"_blank" style=3D"color: #1d1d1d; text-decoration: none !important; text=
+-underline: none; word-wrap: break-word;">
+                                                                        <im=
+g width=3D"120" class=3D"product-image" src=3D"https://cdn.shopify.com/s/fi=
+les/1/0214/7974/files/Sneaker-Politics-NIKE-NigelSylvesterxJordanHalfZipJac=
+ket-Anthracite-Sail-IQ8150-060-WB-1.jpg?v=3D1779496829&amp;width=3D240" alt=
+=3D"Nigel Sylvester x Jordan Half Zip Jacket - Anthracite/Sail - L" style=
+=3D"vertical-align: middle; text-align: center; width: 120px; max-width: 12=
+0px; height: auto !important; border-radius: 0px; padding: 0px;"/>
+                                                                      </a>
+                                                                   =20
+                                                                  </th>
+                                                                  <th class=
+=3D"product-details-wrapper table-stack stack-column" style=3D"mso-line-hei=
+ght-rule: exactly; border-bottom-width: 1px; border-bottom-color: #000000; =
+border-bottom-style: solid; padding-top: 10px; padding-bottom: 10px;" bgcol=
+or=3D"#ffffff" valign=3D"middle">
+                                                                    <table =
+cellspacing=3D"0" cellpadding=3D"0" border=3D"0" width=3D"100%" style=3D"mi=
+n-width: 100%; direction: ltr;" role=3D"presentation">
+                                                                      <tbod=
+y><tr>
+                                                                        <th=
+ class=3D"line-item-description" style=3D"mso-line-height-rule: exactly; di=
+rection: ltr; font-family: &#39;Arial&#39;,-apple-system,BlinkMacSystemFont=
+,&#39;Segoe UI&#39;,Arial,sans-serif; font-size: 14px; line-height: 20px; f=
+ont-weight: 400; text-transform: none; color: #000000; padding: 10px 5px 10=
+px 0;" align=3D"left" bgcolor=3D"#ffffff" valign=3D"top">
+                                                                          <=
+p style=3D"mso-line-height-rule: exactly; direction: ltr; font-family: &#39=
+;Arial&#39;,-apple-system,BlinkMacSystemFont,&#39;Segoe UI&#39;,Arial,sans-=
+serif; font-size: 14px; line-height: 20px; font-weight: 400; text-transform=
+: none; color: #000000; margin: 0;" align=3D"left">
+                                                                           =
+=20
+                                                                           =
+ <a href=3D"https://sneakerpolitics.com/_t/c/v3/AABrKJqMPhItaYa2shzjoA6YxRh=
+i5pa2zAt8RHuAWGQFjDlzHYxY7p-hB7Vvt-hDMPO6DJ_x9J9TsfLZSl2jacgwx_PtI07Lo2Qbbi=
+xiyF7alHRSO-XfPoh2KKMGAtGcxfp7lGdrfmHom9gYi9uxNwMkXR3Kt0Ln6asFOpZ4Ia49ufclK=
+Sr31kYm-CCQpbrc34gvKc-bnQR0Ujw9PyasqLzPHnKU8c09_gP0faIME5eKIEOjXzEcXnS1Usqo=
+Yyzm9cTQDxIPpU_J1Nt-umf9asfhwNY8EaPtgkQ-nbogP39wQ3Oxyy1wp5t8KGahcfPn0sUn3wZ=
+1N0s0sIEInqjnho2gGFBxxmmHWTvokEYAIfJAfoenB9oDb5dZ4zJdRAGtoS-gtzCRzkYlQm0sVc=
+RZiBOdB95CAFXajayWjm6O2hFkHOU3nYvRcLzkkgJGXpVO2jWdIzuDL2W9S7QWF6s5h1T1so1ww=
+d5W0QpFuQ4x-c3VQS9sZ_e-vPkWd_RYoxYyBZo_c9QnYTVxhJuOF9q8gJOFpntdeoFFsbHQmQNG=
+4oiUGJC22V4rXdtuyFMQPj55ntWYwiTDiroC_Ihv4w=3D=3D" class=3D"product_link" ta=
+rget=3D"_blank" style=3D"color: #000000; text-decoration: none !important; =
+text-underline: none; word-wrap: break-word; text-align: left !important; f=
+ont-weight: 400;">
+                                                                           =
+   Nigel Sylvester x Jordan Half Zip Jacket - Anthracite/Sail
+                                                                           =
+ </a>
+                                                                           =
+=20
+                                                                           =
+   <br/>
+                                                                           =
+   <span class=3D"muted" style=3D"text-align: left; direction: ltr; font-fa=
+mily: &#39;Arial&#39;,-apple-system,BlinkMacSystemFont,&#39;Segoe UI&#39;,A=
+rial,sans-serif; font-size: 12px; line-height: 20px; font-weight: normal; t=
+ext-transform: none; color: #000000;">L</span>
+                                                                           =
+=20
+                                                                           =
+=20
+                                                                           =
+=20
+                                                                           =
+=20
+                                                                           =
+=20
+                                                                           =
+   <br/>
+                                                                           =
+   <span class=3D"muted" style=3D"text-align: left; direction: ltr; font-fa=
+mily: &#39;Arial&#39;,-apple-system,BlinkMacSystemFont,&#39;Segoe UI&#39;,A=
+rial,sans-serif; font-size: 12px; line-height: 20px; font-weight: normal; t=
+ext-transform: none; color: #000000;">IQ8150-060|L</span>
+                                                                           =
+=20
+                                                                           =
+=20
+                                                                           =
+=20
+                                                                           =
+=20
+                                                                          <=
+/p>
+                                                                        </t=
+h>
+                                                                        <th=
+ class=3D"right line-item-qty" width=3D"1" style=3D"mso-line-height-rule: e=
+xactly; min-width: 60px; white-space: nowrap; padding: 10px 5px 10px 20px;"=
+ align=3D"right" bgcolor=3D"#ffffff" valign=3D"top">
+                                                                          <=
+p style=3D"mso-line-height-rule: exactly; direction: ltr; font-family: &#39=
+;Arial&#39;,-apple-system,BlinkMacSystemFont,&#39;Segoe UI&#39;,Arial,sans-=
+serif; font-size: 14px; line-height: 20px; font-weight: 400; text-transform=
+: none; color: #000000; margin: 0;" align=3D"right">x=C2=A01</p>
+                                                                        </t=
+h>
+                                                                        <th=
+ class=3D"right line-item-line-price" width=3D"1" style=3D"mso-line-height-=
+rule: exactly; min-width: 60px; white-space: nowrap; padding: 10px 0 10px 2=
+0px;" align=3D"right" bgcolor=3D"#ffffff" valign=3D"top">
+                                                                          <=
+p style=3D"mso-line-height-rule: exactly; direction: ltr; font-family: &#39=
+;Arial&#39;,-apple-system,BlinkMacSystemFont,&#39;Segoe UI&#39;,Arial,sans-=
+serif; font-size: 14px; line-height: 20px; font-weight: 400; text-transform=
+: none; color: #000000; margin: 0;" align=3D"right">$150.00
+</p>
+                                                                        </t=
+h>
+                                                                      </tr>
+                                                                    </tbody=
+></table>
+                                                                  </th>
+                                                                </tr>
+                                                             =20
+                                                           =20
+                                                             =20
+<!-- Bold 2 -->
+                                                               =20
+                                                               =20
+                                                               =20
+                                                               =20
+                                                               =20
+                                                                 =20
+                                                                 =20
+                                                               =20
+                                                                <!-- end Bo=
+ld 2 -->
+                                                                <tr class=
+=3D"row-border-bottom">
+                                                                  <th class=
+=3D"table-stack product-image-wrapper stack-column-center" width=3D"1" styl=
+e=3D"mso-line-height-rule: exactly; border-bottom-width: 1px; border-bottom=
+-color: #000000; border-bottom-style: solid; padding-top: 10px; padding-bot=
+tom: 10px; padding-right: 10px;" bgcolor=3D"#ffffff" valign=3D"middle">
+                                                                   =20
+                                                                      <a hr=
+ef=3D"https://sneakerpolitics.com/_t/c/v3/AACo-moQRhxiLxs3cfzUbqZg73kf7STwY=
+w2yE_7H3K7V5LDl-p1LR8l5kHQrxnN20Ct33Z0cbTHdxWREbuqpGbDyB3Jw17KKmfVcRhP-2nW6=
+dxj2ixBkmNhfMtDjcpSwbAgqgYanJiRmXCCEFrVzWlHFvzS5PG84XLajCFz6BjviLLEUU9GGb1-=
+iOcOw_EedUrrONcuRDm4U2cBV_8HviR4z6ZPf9hCLR-Aw0PDWL7tTS7niglOFovqjmxeIh7AeXK=
+3wmNOCBTbudQ2_2i5KRhGJd7sbGQvCBl4MybO4crHRfpdxIMaLm-qyKQXHg-_QZO0nSmABDuUa6=
+oZNbKZP0CKXsBduppttF4FSbLjvEr9cXv1X02Kx4SRYDoaUruoc2ImHTDAiO_SPraToAG8bYTtC=
+bFLnhm5y42_of93B7cVFY2BR4USMSNxeZ7ZNga3envg6xlFxMgQPciWZOdpSs8L8_4926Frg2eW=
+rmZS6TGWNEHdpSKxAFtlAUmXtHAnopAeCDzXJgePf8MJZhLkUmfUaGQVHiSC-Wq_szj3JNi73yA=
+GXeWjxeJ9FIQWnj7OXMLyAznNT0v301xj1Xg=3D=3D" class=3D"product_link" target=
+=3D"_blank" style=3D"color: #1d1d1d; text-decoration: none !important; text=
+-underline: none; word-wrap: break-word;">
+                                                                        <im=
+g width=3D"120" class=3D"product-image" src=3D"https://cdn.shopify.com/s/fi=
+les/1/0214/7974/files/Sneaker-Politics-NIKE-NigelSylvesterxJordanHalfZipJac=
+ket-Anthracite-Sail-IQ8150-060-WB-1.jpg?v=3D1779496829&amp;width=3D240" alt=
+=3D"Nigel Sylvester x Jordan Half Zip Jacket - Anthracite/Sail - M" style=
+=3D"vertical-align: middle; text-align: center; width: 120px; max-width: 12=
+0px; height: auto !important; border-radius: 0px; padding: 0px;"/>
+                                                                      </a>
+                                                                   =20
+                                                                  </th>
+                                                                  <th class=
+=3D"product-details-wrapper table-stack stack-column" style=3D"mso-line-hei=
+ght-rule: exactly; border-bottom-width: 1px; border-bottom-color: #000000; =
+border-bottom-style: solid; padding-top: 10px; padding-bottom: 10px;" bgcol=
+or=3D"#ffffff" valign=3D"middle">
+                                                                    <table =
+cellspacing=3D"0" cellpadding=3D"0" border=3D"0" width=3D"100%" style=3D"mi=
+n-width: 100%; direction: ltr;" role=3D"presentation">
+                                                                      <tbod=
+y><tr>
+                                                                        <th=
+ class=3D"line-item-description" style=3D"mso-line-height-rule: exactly; di=
+rection: ltr; font-family: &#39;Arial&#39;,-apple-system,BlinkMacSystemFont=
+,&#39;Segoe UI&#39;,Arial,sans-serif; font-size: 14px; line-height: 20px; f=
+ont-weight: 400; text-transform: none; color: #000000; padding: 10px 5px 10=
+px 0;" align=3D"left" bgcolor=3D"#ffffff" valign=3D"top">
+                                                                          <=
+p style=3D"mso-line-height-rule: exactly; direction: ltr; font-family: &#39=
+;Arial&#39;,-apple-system,BlinkMacSystemFont,&#39;Segoe UI&#39;,Arial,sans-=
+serif; font-size: 14px; line-height: 20px; font-weight: 400; text-transform=
+: none; color: #000000; margin: 0;" align=3D"left">
+                                                                           =
+=20
+                                                                           =
+ <a href=3D"https://sneakerpolitics.com/_t/c/v3/AAABLvoAUJbLSW8qU-SMVmyqZMh=
+QcvF6agab3lpWHLKRkUOo0fLszQdqBW3HecJyLjAbWWC0RHsevf2b9rJxpsV9F0_etkHT-htKf8=
+EFSGRkRWTxt-M-JI3MANiZRGxJkhK_vBnnNnJnV_2MPokBsqik5EZ2jdxuh8VAZhd0wWs056y4z=
+WU51p1-Q77rRLayXpLISv9pzfROPKCn1cIZCXO34OzBlzKfkTncLI9jj-IFyL3F5h2qbSibavx5=
+VbENi0gvz58D1D-cIo4lLT9kRfxbnMwj5-6o3eL8HW2ovkZ4GC7u8CGzL694Xb4by6fKb5CfsiN=
+uH_LRgw7cEa-cTnFdGGrLx1P-3LGsG0mTIFAHTq6Kd_9GujkYdwEERdWwXtmma3qE54C9vrVyJS=
+zvvLNkqliiUC_WesAX0UmcNODqoTqnjgMa_BZBqtk_gs_4nErYX74C8GQC6bxTT585UCW_fbwHF=
+P3jL5ucVhc1IsQpdrISePnZqpIBNVv8cSISRrOUoDgs0EOPDSBIouqH4yio171ohj-DmJDXgzfF=
+tdnZyNBO-ol2Bhx8U0G7LCFoXQplNgxM-sadQygb2Q=3D=3D" class=3D"product_link" ta=
+rget=3D"_blank" style=3D"color: #000000; text-decoration: none !important; =
+text-underline: none; word-wrap: break-word; text-align: left !important; f=
+ont-weight: 400;">
+                                                                           =
+   Nigel Sylvester x Jordan Half Zip Jacket - Anthracite/Sail
+                                                                           =
+ </a>
+                                                                           =
+=20
+                                                                           =
+   <br/>
+                                                                           =
+   <span class=3D"muted" style=3D"text-align: left; direction: ltr; font-fa=
+mily: &#39;Arial&#39;,-apple-system,BlinkMacSystemFont,&#39;Segoe UI&#39;,A=
+rial,sans-serif; font-size: 12px; line-height: 20px; font-weight: normal; t=
+ext-transform: none; color: #000000;">M</span>
+                                                                           =
+=20
+                                                                           =
+=20
+                                                                           =
+=20
+                                                                           =
+=20
+                                                                           =
+=20
+                                                                           =
+   <br/>
+                                                                           =
+   <span class=3D"muted" style=3D"text-align: left; direction: ltr; font-fa=
+mily: &#39;Arial&#39;,-apple-system,BlinkMacSystemFont,&#39;Segoe UI&#39;,A=
+rial,sans-serif; font-size: 12px; line-height: 20px; font-weight: normal; t=
+ext-transform: none; color: #000000;">IQ8150-060|M</span>
+                                                                           =
+=20
+                                                                           =
+=20
+                                                                           =
+=20
+                                                                           =
+=20
+                                                                          <=
+/p>
+                                                                        </t=
+h>
+                                                                        <th=
+ class=3D"right line-item-qty" width=3D"1" style=3D"mso-line-height-rule: e=
+xactly; min-width: 60px; white-space: nowrap; padding: 10px 5px 10px 20px;"=
+ align=3D"right" bgcolor=3D"#ffffff" valign=3D"top">
+                                                                          <=
+p style=3D"mso-line-height-rule: exactly; direction: ltr; font-family: &#39=
+;Arial&#39;,-apple-system,BlinkMacSystemFont,&#39;Segoe UI&#39;,Arial,sans-=
+serif; font-size: 14px; line-height: 20px; font-weight: 400; text-transform=
+: none; color: #000000; margin: 0;" align=3D"right">x=C2=A01</p>
+                                                                        </t=
+h>
+                                                                        <th=
+ class=3D"right line-item-line-price" width=3D"1" style=3D"mso-line-height-=
+rule: exactly; min-width: 60px; white-space: nowrap; padding: 10px 0 10px 2=
+0px;" align=3D"right" bgcolor=3D"#ffffff" valign=3D"top">
+                                                                          <=
+p style=3D"mso-line-height-rule: exactly; direction: ltr; font-family: &#39=
+;Arial&#39;,-apple-system,BlinkMacSystemFont,&#39;Segoe UI&#39;,Arial,sans-=
+serif; font-size: 14px; line-height: 20px; font-weight: 400; text-transform=
+: none; color: #000000; margin: 0;" align=3D"right">$150.00
+</p>
+                                                                        </t=
+h>
+                                                                      </tr>
+                                                                    </tbody=
+></table>
+                                                                  </th>
+                                                                </tr>
+                                                             =20
+                                                           =20
+                                                             =20
+<!-- Bold 2 -->
+                                                               =20
+                                                               =20
+                                                               =20
+                                                               =20
+                                                               =20
+                                                                 =20
+                                                                 =20
+                                                               =20
+                                                                <!-- end Bo=
+ld 2 -->
+                                                                <tr class=
+=3D"row-border-bottom">
+                                                                  <th class=
+=3D"table-stack product-image-wrapper stack-column-center" width=3D"1" styl=
+e=3D"mso-line-height-rule: exactly; border-bottom-width: 1px; border-bottom=
+-color: #000000; border-bottom-style: solid; padding-top: 10px; padding-bot=
+tom: 10px; padding-right: 10px;" bgcolor=3D"#ffffff" valign=3D"middle">
+                                                                   =20
+                                                                      <a hr=
+ef=3D"https://sneakerpolitics.com/_t/c/v3/AACa8NEk7m15g77jTbAVAcmDL5SJJaLJZ=
+W88pBNecxBEp7GkhDVX15obv60fOfRwGSHpjxjRgu2vbgvCF0k_J4GbscHzhqzB04vYQ0V4cfZm=
+IihqQFqv7QahahLoP17Wen5XI0fgrZud1pF7vWHZn2FDSryLC_CnmEWeW5KN2hHimZEqbz2WqRX=
+_y1gPwUOjExepaGri5gd9gYI2h23mkJjf4-q6-fnMuiIQ3wqcHE9gldbq3hws_LMCqNT6AUzrB5=
+p5PnRgxL624WtqfouW9btdkChCJE6QlovVEWLg4Ct5wz1Ki8giqfkC9pgFP_l6BSLiy48Y7AxvD=
+UYoBJwNJgynsuFe-wVQpI-30izPT2sG_c9OcKuISPUd2W82TchBWKnOgFEgGT1ZhL430m-utVHf=
+RL_-6AH-4neDAB0MNmA8NsLM8-vs2mdNpuK2JUpzB7fMeC-OZhf6OlrFzTdDtZutMdpCxiD_5e7=
+8L_oQmXCsDuqf8l6cvehqoZW0J6Ub72BjoQLZx5zl-VGwUg57vGfIytuwfjY6VmtFhiK2R-somo=
+brvzgfZbi1n3avRbl4fHxDjigmV4A6luZF6Q=3D=3D" class=3D"product_link" target=
+=3D"_blank" style=3D"color: #1d1d1d; text-decoration: none !important; text=
+-underline: none; word-wrap: break-word;">
+                                                                        <im=
+g width=3D"120" class=3D"product-image" src=3D"https://cdn.shopify.com/s/fi=
+les/1/0214/7974/files/Sneaker-Politics-NIKE-NigelSylvesterxJordanHalfZipJac=
+ket-Anthracite-Sail-IQ8150-060-WB-1.jpg?v=3D1779496829&amp;width=3D240" alt=
+=3D"Nigel Sylvester x Jordan Half Zip Jacket - Anthracite/Sail - S" style=
+=3D"vertical-align: middle; text-align: center; width: 120px; max-width: 12=
+0px; height: auto !important; border-radius: 0px; padding: 0px;"/>
+                                                                      </a>
+                                                                   =20
+                                                                  </th>
+                                                                  <th class=
+=3D"product-details-wrapper table-stack stack-column" style=3D"mso-line-hei=
+ght-rule: exactly; border-bottom-width: 1px; border-bottom-color: #000000; =
+border-bottom-style: solid; padding-top: 10px; padding-bottom: 10px;" bgcol=
+or=3D"#ffffff" valign=3D"middle">
+                                                                    <table =
+cellspacing=3D"0" cellpadding=3D"0" border=3D"0" width=3D"100%" style=3D"mi=
+n-width: 100%; direction: ltr;" role=3D"presentation">
+                                                                      <tbod=
+y><tr>
+                                                                        <th=
+ class=3D"line-item-description" style=3D"mso-line-height-rule: exactly; di=
+rection: ltr; font-family: &#39;Arial&#39;,-apple-system,BlinkMacSystemFont=
+,&#39;Segoe UI&#39;,Arial,sans-serif; font-size: 14px; line-height: 20px; f=
+ont-weight: 400; text-transform: none; color: #000000; padding: 10px 5px 10=
+px 0;" align=3D"left" bgcolor=3D"#ffffff" valign=3D"top">
+                                                                          <=
+p style=3D"mso-line-height-rule: exactly; direction: ltr; font-family: &#39=
+;Arial&#39;,-apple-system,BlinkMacSystemFont,&#39;Segoe UI&#39;,Arial,sans-=
+serif; font-size: 14px; line-height: 20px; font-weight: 400; text-transform=
+: none; color: #000000; margin: 0;" align=3D"left">
+                                                                           =
+=20
+                                                                           =
+ <a href=3D"https://sneakerpolitics.com/_t/c/v3/AADtlVvEHUiIbwIjecEYUdQhNAR=
+lZ_T36mbR8F-vfBSYVl-WcgH0AK3rdjIR8VieCJpTBFvQATGdzWUGjYuqcz6PAbyos_S2lnLzxQ=
+XCsrcSk3pVwFrLWZHcLzw4rygziG0iJSRVtJ18cbdajGY_O96bAns2Kk4OgI_fk1ICF64RRc7kW=
+80MGfI603eJl7O75C0NnNnF1BDogeNB6cGTdjhOjr2Y6B7eV2e6Ez0ZddtwHjO8RmoK1UMeXp2i=
+_S6vNNnQKEocx4kLQ2GJjNHrA6bFMUunZ57IsVreO46Pg9kX6n0tL5gZ91xFDN7HbLFHcDl5eco=
+jL-7nWHLh-AoTPHb4oL_gdo4yhKCka52gobdcQ9B2HnmN3Vf26HrEcH2Fu2eKGuz_NUjsyfJO36=
+ZXWykscKJwNd_roH_ete8GdLIlsbUyV6IZgJiQ_FdP0SJEnR6nZ27UR6pAmWX25nZhl9QI2Xsuq=
+rx8BNQOO38K3zhxLVMZTa_m-fDSld3TF8ZaClcqnqre4Sqp_IqudkvmdiNLmx7B_sfjrq-F-qji=
+8pIhPpXm2NKC525t07OEbI3uJ-9WZNaKdhdfjsXpyQ=3D=3D" class=3D"product_link" ta=
+rget=3D"_blank" style=3D"color: #000000; text-decoration: none !important; =
+text-underline: none; word-wrap: break-word; text-align: left !important; f=
+ont-weight: 400;">
+                                                                           =
+   Nigel Sylvester x Jordan Half Zip Jacket - Anthracite/Sail
+                                                                           =
+ </a>
+                                                                           =
+=20
+                                                                           =
+   <br/>
+                                                                           =
+   <span class=3D"muted" style=3D"text-align: left; direction: ltr; font-fa=
+mily: &#39;Arial&#39;,-apple-system,BlinkMacSystemFont,&#39;Segoe UI&#39;,A=
+rial,sans-serif; font-size: 12px; line-height: 20px; font-weight: normal; t=
+ext-transform: none; color: #000000;">S</span>
+                                                                           =
+=20
+                                                                           =
+=20
+                                                                           =
+=20
+                                                                           =
+=20
+                                                                           =
+=20
+                                                                           =
+   <br/>
+                                                                           =
+   <span class=3D"muted" style=3D"text-align: left; direction: ltr; font-fa=
+mily: &#39;Arial&#39;,-apple-system,BlinkMacSystemFont,&#39;Segoe UI&#39;,A=
+rial,sans-serif; font-size: 12px; line-height: 20px; font-weight: normal; t=
+ext-transform: none; color: #000000;">IQ8150-060|S</span>
+                                                                           =
+=20
+                                                                           =
+=20
+                                                                           =
+=20
+                                                                           =
+=20
+                                                                          <=
+/p>
+                                                                        </t=
+h>
+                                                                        <th=
+ class=3D"right line-item-qty" width=3D"1" style=3D"mso-line-height-rule: e=
+xactly; min-width: 60px; white-space: nowrap; padding: 10px 5px 10px 20px;"=
+ align=3D"right" bgcolor=3D"#ffffff" valign=3D"top">
+                                                                          <=
+p style=3D"mso-line-height-rule: exactly; direction: ltr; font-family: &#39=
+;Arial&#39;,-apple-system,BlinkMacSystemFont,&#39;Segoe UI&#39;,Arial,sans-=
+serif; font-size: 14px; line-height: 20px; font-weight: 400; text-transform=
+: none; color: #000000; margin: 0;" align=3D"right">x=C2=A01</p>
+                                                                        </t=
+h>
+                                                                        <th=
+ class=3D"right line-item-line-price" width=3D"1" style=3D"mso-line-height-=
+rule: exactly; min-width: 60px; white-space: nowrap; padding: 10px 0 10px 2=
+0px;" align=3D"right" bgcolor=3D"#ffffff" valign=3D"top">
+                                                                          <=
+p style=3D"mso-line-height-rule: exactly; direction: ltr; font-family: &#39=
+;Arial&#39;,-apple-system,BlinkMacSystemFont,&#39;Segoe UI&#39;,Arial,sans-=
+serif; font-size: 14px; line-height: 20px; font-weight: 400; text-transform=
+: none; color: #000000; margin: 0;" align=3D"right">$150.00
+</p>
+                                                                        </t=
+h>
+                                                                      </tr>
+                                                                    </tbody=
+></table>
+                                                                  </th>
+                                                                </tr>
+                                                             =20
+                                                           =20
+                                                          </tbody></table>
+                                                        </th>
+                                                      </tr>
+                                                      <tr>
+                                                        <th class=3D"pricin=
+g_table table_content" style=3D"mso-line-height-rule: exactly; padding-top:=
+ 5px; padding-bottom: 5px;" bgcolor=3D"#ffffff" valign=3D"top">
+                                                        </th>
+                                                      </tr>
+                                                      <tr>
+                                                        <th colspan=3D"2" c=
+lass=3D"pricing_table table_content" style=3D"mso-line-height-rule: exactly=
+; padding-top: 5px; padding-bottom: 0px;" bgcolor=3D"#ffffff" valign=3D"top=
+">
+                                                          <table cellspacin=
+g=3D"0" cellpadding=3D"0" border=3D"0" width=3D"100%" style=3D"min-width: 1=
+00%; direction: ltr;" role=3D"presentation">
+                                                           =20
+                                                           =20
+                                                           =20
+                                                           =20
+                                                            <tbody><tr>
+                                                              <th class=3D"=
+table-title" data-key=3D"33145333_subtotal" style=3D"mso-line-height-rule: =
+exactly; direction: ltr; font-family: &#39;Arial&#39;,-apple-system,BlinkMa=
+cSystemFont,&#39;Segoe UI&#39;,Arial,sans-serif; font-size: 14px; line-heig=
+ht: 20px; font-weight: 400; text-transform: none; color: #000000; width: 65=
+%; padding: 5px 0;" align=3D"left" bgcolor=3D"#ffffff" valign=3D"top">Subto=
+tal</th>
+                                                              <th class=3D"=
+table-text" style=3D"mso-line-height-rule: exactly; direction: ltr; font-fa=
+mily: &#39;Arial&#39;,-apple-system,BlinkMacSystemFont,&#39;Segoe UI&#39;,A=
+rial,sans-serif; font-size: 14px; line-height: 20px; font-weight: 400; text=
+-transform: none; color: #000000; width: 35%; padding: 5px 0;" align=3D"rig=
+ht" bgcolor=3D"#ffffff" valign=3D"middle">$450.00</th>
+                                                            </tr>
+                                                           =20
+                                                              <tr>
+                                                                <th class=
+=3D"table-title" style=3D"mso-line-height-rule: exactly; direction: ltr; fo=
+nt-family: &#39;Arial&#39;,-apple-system,BlinkMacSystemFont,&#39;Segoe UI&#=
+39;,Arial,sans-serif; font-size: 14px; line-height: 20px; font-weight: 400;=
+ text-transform: none; color: #000000; width: 65%; padding: 5px 0;" align=
+=3D"left" bgcolor=3D"#ffffff" valign=3D"top">
+                                                                  Flat Rate
+                                                                 =20
+                                                                 =20
+                                                                </th>
+                                                                <th class=
+=3D"table-text" style=3D"mso-line-height-rule: exactly; direction: ltr; fon=
+t-family: &#39;Arial&#39;,-apple-system,BlinkMacSystemFont,&#39;Segoe UI&#3=
+9;,Arial,sans-serif; font-size: 14px; line-height: 20px; font-weight: 400; =
+text-transform: none; color: #000000; width: 35%; padding: 5px 0;" align=3D=
+"right" bgcolor=3D"#ffffff" valign=3D"middle">
+                                                                 =20
+                                                                  $15.00</t=
+h>
+                                                              </tr>
+                                                           =20
+                                                           =20
+                                                           =20
+                                                           =20
+                                                            <tr class=3D"pr=
+icing_table-total-row">
+                                                              <th class=3D"=
+table-title" data-key=3D"33145333_total" style=3D"mso-line-height-rule: exa=
+ctly; direction: ltr; font-family: &#39;Arial&#39;,-apple-system,BlinkMacSy=
+stemFont,&#39;Segoe UI&#39;,Arial,sans-serif; font-size: 14px; line-height:=
+ 20px; font-weight: 400; text-transform: none; color: #000000; width: 65%; =
+padding: 5px 0;" align=3D"left" bgcolor=3D"#ffffff" valign=3D"top">Total</t=
+h>
+                                                              <th class=3D"=
+table-text" style=3D"mso-line-height-rule: exactly; direction: ltr; font-fa=
+mily: &#39;Arial&#39;,-apple-system,BlinkMacSystemFont,&#39;Segoe UI&#39;,A=
+rial,sans-serif; font-size: 14px; line-height: 20px; font-weight: 400; text=
+-transform: none; color: #000000; width: 35%; padding: 5px 0;" align=3D"rig=
+ht" bgcolor=3D"#ffffff" valign=3D"middle">$465.00</th>
+                                                            </tr>
+                                                           =20
+                                                           =20
+                                                           =20
+                                                           =20
+                                                            </tbody></table=
+>
+                                                          </th>
+                                                        </tr>
+                                                      </tbody></table>
+                                                    </th>
+                                                 =20
+                                                </tr>
+                                              </tbody></table>
+                                            </th>
+                                          </tr>
+                                          <!-- END SECTION: Products With P=
+ricing -->
+                                          <!-- BEGIN SECTION: Payment Info =
+-->
+                                          <tr id=3D"section-33145334" class=
+=3D"section payment_info">
+                                            <th class=3D"section_border" st=
+yle=3D"mso-line-height-rule: exactly; padding: 5px 20px;" bgcolor=3D"#fffff=
+f">
+                                              <table border=3D"0" width=3D"=
+100%" cellpadding=3D"0" cellspacing=3D"0" align=3D"center" style=3D"min-wid=
+th: 100%; direction: ltr;" role=3D"presentation">
+                                                <tbody><tr>
+                                                  <th class=3D"section_cont=
+ent" style=3D"mso-line-height-rule: exactly; padding: 5px 20px;" bgcolor=3D=
+"#ffffff" valign=3D"top">
+                                                    <table class=3D"table_i=
+nner" cellspacing=3D"0" cellpadding=3D"0" border=3D"0" width=3D"100%" style=
+=3D"min-width: 100%; direction: ltr;" role=3D"presentation">
+                                                      <!-- PAYMENT INFO -->
+                                                     =20
+                                                     =20
+                                                       =20
+                                                       =20
+                                                     =20
+                                                      </table>
+                                                    </th>
+                                                  </tr>
+                                                </tbody></table>
+                                              </th>
+                                            </tr>
+                                            <!-- END SECTION: Payment Info =
+-->
+                                            <!-- BEGIN SECTION: Divider -->
+                                            <tr id=3D"section-33145948" cla=
+ss=3D"section divider">
+                                              <th class=3D"section_border" =
+style=3D"mso-line-height-rule: exactly; padding: 5px 20px;" bgcolor=3D"#fff=
+fff">
+                                                <table border=3D"0" width=
+=3D"100%" cellpadding=3D"0" cellspacing=3D"0" align=3D"center" style=3D"min=
+-width: 100%; direction: ltr;" role=3D"presentation">
+                                                  <tbody><tr>
+                                                    <th class=3D"section_co=
+ntent" style=3D"mso-line-height-rule: exactly; padding: 4px 20px;" bgcolor=
+=3D"#ffffff" valign=3D"top">
+                                                      <table cellspacing=3D=
+"0" cellpadding=3D"0" border=3D"0" width=3D"100%" role=3D"presentation" sty=
+le=3D"direction: ltr;">
+                                                        <tbody><tr>
+                                                          <th class=3D"divi=
+der_content" height=3D"0" style=3D"mso-line-height-rule: exactly; border-to=
+p-width: 1px; border-top-color: #000000; border-top-style: solid;" bgcolor=
+=3D"#ffffff" valign=3D"top">
+                                                          </th>
+                                                        </tr>
+                                                      </tbody></table>
+                                                    </th>
+                                                  </tr>
+                                                </tbody></table>
+                                              </th>
+                                            </tr>
+                                            <!-- END SECTION: Divider -->
+                                            <!-- BEGIN SECTION: Link -->
+                                            <tr id=3D"section-33146710" cla=
+ss=3D"section link">
+                                              <th class=3D"section_border" =
+style=3D"mso-line-height-rule: exactly; padding: 5px 20px;" bgcolor=3D"#fff=
+fff">
+                                                <table border=3D"0" width=
+=3D"100%" cellpadding=3D"0" cellspacing=3D"0" align=3D"center" style=3D"min=
+-width: 100%; direction: ltr;" role=3D"presentation">
+                                                  <tbody><tr>
+                                                    <th class=3D"section_co=
+ntent" style=3D"mso-line-height-rule: exactly; padding: 5px 20px;" bgcolor=
+=3D"#ffffff" valign=3D"top">
+                                                      <p style=3D"mso-line-=
+height-rule: exactly; direction: ltr; font-family: &#39;Arial&#39;,-apple-s=
+ystem,BlinkMacSystemFont,&#39;Segoe UI&#39;,Arial,sans-serif; font-size: 14=
+px; line-height: 20px; font-weight: 400; text-transform: none; color: #0000=
+00; margin: 0;" align=3D"left">
+                                                        <a href=3D"https://=
+sneakerpolitics.com/_t/c/v3/AADuRRPSy7iiRwgI4tohoxslldDYuCJAp1lgesnRTf4U6pd=
+0nEu4Pp6yP04fMsI8L0by6n5GTuWfwOpnWPxn6MnnN9SrYqC1porrXZoLCKOFGiTa9iEn15BoW6=
+Gx1LNcLVU6v4p5DP8spZryKJYnDzB7-77z8K4W92Vg1KGL6KVhxqaz_ATXdKbQZu8R7L6-IE9u5=
+uz4iLwF0bZmFLGuGzq1kyFYoypVAVehlcM_DrqrRqXC3p9kNZeGUMSWpznTxzw2isnEgOQnmHNm=
+gWJA4r7SWd8EeSvzDdrWUzKDLaKCwePKcfIYODcsUM-xwsRziLGGGg4MpNmUAUYCPg2L65hjtL7=
+7eeJhqHHOr5-s-rOFewSazjfnJAr4s_sCbRQmd6jBtrwjq9htggYMh_Q_N-NxjHCirhyhNIpnVi=
+VvCQkwfeBzixn5qD5zQT-Ca1xfSfrQFIOc_BvKHCUblZjGrl2M7lyikRx_A0gr9G1OWI2FD9piL=
+U0HbyRuw7Qod__ga-32DOajAIEzeYrrr9BgK3110VE6d5pi-Ciu" data-key=3D"33146710_l=
+ink_text" style=3D"color: #1d1d1d; text-decoration: none !important; text-u=
+nderline: none; word-wrap: break-word;">FAQ</a>
+                                                      </p>
+                                                    </th>
+                                                  </tr>
+                                                </tbody></table>
+                                              </th>
+                                            </tr>
+                                            <!-- END SECTION: Link -->
+                                            <!-- BEGIN SECTION: Divider -->
+                                            <tr id=3D"section-33145949" cla=
+ss=3D"section divider">
+                                              <th class=3D"section_border" =
+style=3D"mso-line-height-rule: exactly; padding: 5px 20px;" bgcolor=3D"#fff=
+fff">
+                                                <table border=3D"0" width=
+=3D"100%" cellpadding=3D"0" cellspacing=3D"0" align=3D"center" style=3D"min=
+-width: 100%; direction: ltr;" role=3D"presentation">
+                                                  <tbody><tr>
+                                                    <th class=3D"section_co=
+ntent" style=3D"mso-line-height-rule: exactly; padding: 4px 20px;" bgcolor=
+=3D"#ffffff" valign=3D"top">
+                                                      <table cellspacing=3D=
+"0" cellpadding=3D"0" border=3D"0" width=3D"100%" role=3D"presentation" sty=
+le=3D"direction: ltr;">
+                                                        <tbody><tr>
+                                                          <th class=3D"divi=
+der_content" height=3D"0" style=3D"mso-line-height-rule: exactly; border-to=
+p-width: 1px; border-top-color: #000000; border-top-style: solid;" bgcolor=
+=3D"#ffffff" valign=3D"top">
+                                                          </th>
+                                                        </tr>
+                                                      </tbody></table>
+                                                    </th>
+                                                  </tr>
+                                                </tbody></table>
+                                              </th>
+                                            </tr>
+                                            <!-- END SECTION: Divider -->
+                                            <!-- BEGIN SECTION: Link -->
+                                            <tr id=3D"section-33146711" cla=
+ss=3D"section link">
+                                              <th class=3D"section_border" =
+style=3D"mso-line-height-rule: exactly; padding: 5px 20px;" bgcolor=3D"#fff=
+fff">
+                                                <table border=3D"0" width=
+=3D"100%" cellpadding=3D"0" cellspacing=3D"0" align=3D"center" style=3D"min=
+-width: 100%; direction: ltr;" role=3D"presentation">
+                                                  <tbody><tr>
+                                                    <th class=3D"section_co=
+ntent" style=3D"mso-line-height-rule: exactly; padding: 5px 20px;" bgcolor=
+=3D"#ffffff" valign=3D"top">
+                                                      <p style=3D"mso-line-=
+height-rule: exactly; direction: ltr; font-family: &#39;Arial&#39;,-apple-s=
+ystem,BlinkMacSystemFont,&#39;Segoe UI&#39;,Arial,sans-serif; font-size: 14=
+px; line-height: 20px; font-weight: 400; text-transform: none; color: #0000=
+00; margin: 0;" align=3D"left">
+                                                        <a href=3D"https://=
+sneakerpolitics.com/_t/c/v3/AAAJfmuDi2korwiH3LsQupAz4GQEOpNB7llkXLdbrFMWVJP=
+xnH8l7w5mge-AGgs93PVeU07WJIjaTwLRqRdQEr7tFXGWJmeh8wI-yzr56WtfUJLUP_ta7xybBY=
+PRuMfrC-WfmVKJzwMF06xYQrs1LHdcZJ69uj1VB6mn-6Lbuyo7chUgGQRTF0LcSVqi_n_Bz2Nte=
+kwXnAqkuxFLNi5C1XukAw5y2_8CLx0xSbFZVvl44-jBydif4O1UxTBQhFLT0PWEInEozp3Dn87c=
+sky0vGdsRE6DL60xlEkKkuN6c0DxiAPUoTA=3D" data-key=3D"33146711_link_text" sty=
+le=3D"color: #1d1d1d; text-decoration: none !important; text-underline: non=
+e; word-wrap: break-word;">Help Center</a>
+                                                      </p>
+                                                    </th>
+                                                  </tr>
+                                                </tbody></table>
+                                              </th>
+                                            </tr>
+                                            <!-- END SECTION: Link -->
+                                            <!-- BEGIN SECTION: Divider -->
+                                            <tr id=3D"section-33146712" cla=
+ss=3D"section divider">
+                                              <th class=3D"section_border" =
+style=3D"mso-line-height-rule: exactly; padding: 5px 20px;" bgcolor=3D"#fff=
+fff">
+                                                <table border=3D"0" width=
+=3D"100%" cellpadding=3D"0" cellspacing=3D"0" align=3D"center" style=3D"min=
+-width: 100%; direction: ltr;" role=3D"presentation">
+                                                  <tbody><tr>
+                                                    <th class=3D"section_co=
+ntent" style=3D"mso-line-height-rule: exactly; padding: 4px 20px;" bgcolor=
+=3D"#ffffff" valign=3D"top">
+                                                      <table cellspacing=3D=
+"0" cellpadding=3D"0" border=3D"0" width=3D"100%" role=3D"presentation" sty=
+le=3D"direction: ltr;">
+                                                        <tbody><tr>
+                                                          <th class=3D"divi=
+der_content" height=3D"0" style=3D"mso-line-height-rule: exactly; border-to=
+p-width: 1px; border-top-color: #000000; border-top-style: solid;" bgcolor=
+=3D"#ffffff" valign=3D"top">
+                                                          </th>
+                                                        </tr>
+                                                      </tbody></table>
+                                                    </th>
+                                                  </tr>
+                                                </tbody></table>
+                                              </th>
+                                            </tr>
+                                            <!-- END SECTION: Divider -->
+                                            <!-- BEGIN SECTION: Link -->
+                                            <tr id=3D"section-33146713" cla=
+ss=3D"section link">
+                                              <th class=3D"section_border" =
+style=3D"mso-line-height-rule: exactly; padding: 5px 20px;" bgcolor=3D"#fff=
+fff">
+                                                <table border=3D"0" width=
+=3D"100%" cellpadding=3D"0" cellspacing=3D"0" align=3D"center" style=3D"min=
+-width: 100%; direction: ltr;" role=3D"presentation">
+                                                  <tbody><tr>
+                                                    <th class=3D"section_co=
+ntent" style=3D"mso-line-height-rule: exactly; padding: 5px 20px;" bgcolor=
+=3D"#ffffff" valign=3D"top">
+                                                      <p style=3D"mso-line-=
+height-rule: exactly; direction: ltr; font-family: &#39;Arial&#39;,-apple-s=
+ystem,BlinkMacSystemFont,&#39;Segoe UI&#39;,Arial,sans-serif; font-size: 14=
+px; line-height: 20px; font-weight: 400; text-transform: none; color: #0000=
+00; margin: 0;" align=3D"left">
+                                                        <a href=3D"https://=
+sneakerpolitics.com/_t/c/v3/AADnUI2MExhfQxbCPdPNGGfHiBVAfOKSAjAeG0hMbTWMTzv=
+_iF5ppEx6Lh6FEm1ix-238s3D16lNrXjjlIIDz0_SYJsCuqp_fXbYn0HEswSqLbOYeH4h3Ci-mX=
+Mo9XI-B0lQJchg3vsvdue4f1OfopvvtsSEVmFWZuwXo2G43umNYmr6H5L2RhLxvCHmmg-_GHJJi=
+J2n6uffWmRPS_QjMWuOclIhVLkw0-NFEuLN1COcNir6ZPUxPxDoUxRiOZDEwyr4pfXkwYIdRqn_=
+4MsJOmOq8Cfysxb1Ny-9ml3IrXi6QqfY32tekG-FsSyRvrjEgm6mIRvTvIM649R2goTefl3xBDH=
+gf6zta96ZupiOZHXzRNsrFtYqAk0ZRywg1uMq7oqBsiEGHhSFbutoFC2sa2AkWoKqQRcaFN5f-Z=
+9Ky3G29wcrdNTiAoAprfbOolLWmZAHdofYW7QOTsFPd4dHEGkDFUUgu9D3nxeA5L1xsKcbUYZWS=
+9vdxaQcWjjXHUSfcBD1sCMRuTgzpcHs6D_yaLY_uv90JhOrrHscF1ogJ5WoG2QAT2uBweW27tIi=
+" data-key=3D"33146713_link_text" style=3D"color: #1d1d1d; text-decoration:=
+ none !important; text-underline: none; word-wrap: break-word;">Politics VI=
+P Club</a>
+                                                      </p>
+                                                    </th>
+                                                  </tr>
+                                                </tbody></table>
+                                              </th>
+                                            </tr>
+                                            <!-- END SECTION: Link -->
+                                            <!-- BEGIN SECTION: Divider -->
+                                            <tr id=3D"section-33146714" cla=
+ss=3D"section divider">
+                                              <th class=3D"section_border" =
+style=3D"mso-line-height-rule: exactly; padding: 5px 20px 20px;" bgcolor=3D=
+"#ffffff">
+                                                <table border=3D"0" width=
+=3D"100%" cellpadding=3D"0" cellspacing=3D"0" align=3D"center" style=3D"min=
+-width: 100%; direction: ltr;" role=3D"presentation">
+                                                  <tbody><tr>
+                                                    <th class=3D"section_co=
+ntent" style=3D"mso-line-height-rule: exactly; padding: 4px 20px;" bgcolor=
+=3D"#ffffff" valign=3D"top">
+                                                      <table cellspacing=3D=
+"0" cellpadding=3D"0" border=3D"0" width=3D"100%" role=3D"presentation" sty=
+le=3D"direction: ltr;">
+                                                        <tbody><tr>
+                                                          <th class=3D"divi=
+der_content" height=3D"0" style=3D"mso-line-height-rule: exactly; border-to=
+p-width: 1px; border-top-color: #000000; border-top-style: solid;" bgcolor=
+=3D"#ffffff" valign=3D"top">
+                                                          </th>
+                                                        </tr>
+                                                      </tbody></table>
+                                                    </th>
+                                                  </tr>
+                                                </tbody></table>
+                                              </th>
+                                            </tr>
+                                            <!-- END SECTION: Divider -->
+                                            <tr data-id=3D"link-list" class=
+=3D"section">
+                                              <td class=3D"menu_bar menu_ba=
+r_6" style=3D"mso-line-height-rule: exactly; padding: 20px 0;" bgcolor=3D"#=
+ffffff">
+                                                <table class=3D"table_menu_=
+bar" border=3D"0" width=3D"100%" cellpadding=3D"0" cellspacing=3D"0" role=
+=3D"presentation" style=3D"direction: ltr;">
+                                                  <tbody><tr>
+                                                    <th class=3D"menu_bar_i=
+tem first" style=3D"width: 25%; mso-line-height-rule: exactly; font-family:=
+ &#39;Arial&#39;,-apple-system,BlinkMacSystemFont,&#39;Segoe UI&#39;,Arial,=
+sans-serif; font-size: 12px; font-weight: 400; line-height: 20px; color: #0=
+00000; text-transform: uppercase; border-right-width: 1px; border-right-col=
+or: #000000; border-right-style: solid; border-left-width: 1px; border-left=
+-color: #000000; border-left-style: none;" align=3D"center" bgcolor=3D"#fff=
+fff">
+                                                      <a href=3D"https://sn=
+eakerpolitics.com/_t/c/v3/AACBN4w5BttthKW2aqsxbvVD0cyOsllz8iYlA10AzsZzBPZ3g=
+M8q8drIA-2x4B2_-I1t97ArPNSHqdVUeQOaX0mod16XpYpleSK-SZPAOBfpJOHlxelUWKCu8ZFd=
+zyTr4c2YyWZLEmOe1doy1F3x91e_uTOuxuDhx4tsaaUw_66VnQjtSv8qWfAXSj82rUBoL-dnuL_=
+9D3e69PtZdouFxTasesEMMqpFemESOUQXMEZmcBzuwsp0GAzH4tuQ7YwZOc6zBqoeir039Yfo_O=
+0ZFSeMb562LufbfSvZvdzJta0yZ4RFyKvwBee_XJOz7MUgJvTwxoR7OwkhSaGnT5kBXOvZj6H7f=
+20uDcyyQHvqHcDnCI39VdzuDbMEWD8ZOMpk2kAN_uPbFNXviKHJsiWcV-qO5_cgQv9e-DNdAgzV=
+xyaCbIa6WN72ZUjTvoinY5bYcut-qv7BPOn28v6SY76cmelZWPQZJzdB3Ed4rZwgSU1Sqn4k-yG=
+kSWTEbzH1EdtqZYMw1sdQPjXKzyUkwPtjVdywbl_7_olpe7oekzOgKfhKHBHEO3y1jwg=3D" ta=
+rget=3D"_blank" style=3D"color: #000000; text-decoration: none !important; =
+text-underline: none; word-wrap: break-word; text-align: center !important;=
+ font-family: &#39;Arial&#39;,-apple-system,BlinkMacSystemFont,&#39;Segoe U=
+I&#39;,Arial,sans-serif; font-size: 12px; font-weight: 400; line-height: 20=
+px; text-transform: uppercase;">
+                                                        POLITICS
+                                                      </a>
+                                                    </th>
+                                                    <th class=3D"menu_bar_i=
+tem" style=3D"width: 25%; mso-line-height-rule: exactly; font-family: &#39;=
+Arial&#39;,-apple-system,BlinkMacSystemFont,&#39;Segoe UI&#39;,Arial,sans-s=
+erif; font-size: 12px; font-weight: 400; line-height: 20px; color: #000000;=
+ text-transform: uppercase; border-right-width: 1px; border-right-color: #0=
+00000; border-right-style: solid; border-left-width: 1px; border-left-color=
+: #000000; border-left-style: solid;" align=3D"center" bgcolor=3D"#ffffff">
+                                                      <a href=3D"https://sn=
+eakerpolitics.com/_t/c/v3/AABL7ciZUhGvWzHp4fYM2RT2PPppZL_1sk2EC4Lvwb4ty8SOO=
+Q9ZclLwGaBPNOTb5Lyje4So7CP9m1rhitOl3l2VSqVGow_P50Y6OpLH5nxOYRL1OlyY0jknnFPR=
+v2UsLy6BkuDbF-RCeed2cjxsfbVVh2PoY4tk7u8dLw7aS8BEaMnNKEutsX7pxHIdXR-8j_sanKj=
+0zQxoaAWWimjpKCx_1tV3ZpOvQ3SUuTtCmd_U9Vb8g1Z0u0fFIHtdkijzM7CDEjDhx6eVV9gm2v=
+lYM7R3VyoygKwHWTkChLQrQjCeysbTOGB79mgd2MJgB21ZDEn5U9mJdHPWzbj7ftOqIuufEBRWg=
+IFE8bE55zRROrHhRMgYccHQ7NK76NAL2PTn8Xep9mB6avV5ZjJMY2q2uTO2z7yHA1Ii-4HCwEtj=
+qrP8wMDeJCSSkY8jNuqhtD4DfKCGlK2SPIJk-HgKqexFqOlpd4zULwo68bEa5JHoDkJ02pFS_-7=
+WJG-4ZpC71qjyeHOfQHTlRmq3jP0fG6fMBlnsXUvGmC1Aphzk0S-tQDunu90=3D" target=3D"=
+_blank" style=3D"color: #000000; text-decoration: none !important; text-und=
+erline: none; word-wrap: break-word; text-align: center !important; font-fa=
+mily: &#39;Arial&#39;,-apple-system,BlinkMacSystemFont,&#39;Segoe UI&#39;,A=
+rial,sans-serif; font-size: 12px; font-weight: 400; line-height: 20px; text=
+-transform: uppercase;">
+                                                        RELEASES
+                                                      </a>
+                                                    </th>
+                                                    <th class=3D"menu_bar_i=
+tem" style=3D"width: 25%; mso-line-height-rule: exactly; font-family: &#39;=
+Arial&#39;,-apple-system,BlinkMacSystemFont,&#39;Segoe UI&#39;,Arial,sans-s=
+erif; font-size: 12px; font-weight: 400; line-height: 20px; color: #000000;=
+ text-transform: uppercase; border-right-width: 1px; border-right-color: #0=
+00000; border-right-style: solid; border-left-width: 1px; border-left-color=
+: #000000; border-left-style: solid;" align=3D"center" bgcolor=3D"#ffffff">
+                                                      <a href=3D"https://sn=
+eakerpolitics.com/_t/c/v3/AADxfkqvOw-eCSmOdiwqHCttzb-rOs7xpIladP2iw0LvJtWXA=
+k7C2OzmVlK2Bs-vdETLGkQ4IUTRe7Q8jyu3mneefGGIjwSImzBdewIHRDMnLOI480ExxafMCosG=
+Jg4dGPzwBK8q_1iEOsDjuFh6PyUdvwnHi2n6kwyT7R_VbG1PWnwtvh7yqrMeKbw9ktTBBMzOUSy=
+JocuauFws2mLTNwjL9Z2j79T5iKgaJnA0RzS4bCLRVboMMU61TFAFVP1CCbnknR_7cRftFYxyte=
+coAliVvNRGk2D7ltEWOtP4xDKmn3l30VxmcTwc5Kru43dZP6sHOdw73pR_KMmnx87lOQO7j5Gtq=
+Smz8fbdF4lyAC0amVpRCJd9RbEs2ylf9OKvol37wncdRA1Vvmyn-nS3D8gXtlktu-hRCoZE8A3J=
+3vP7HkmE6BzitLh1pukHrFjvYtflpSal9QiSYPtErCiV-S8ioMJ88zSUC86pRpOC7xRdOzfzYpR=
+vhxHEKVKpGpqSaOWp78KWF2lsn45P1HHsMPLlCqDhJxa7ToE_fwKQZIh2FTABzQ=3D=3D" targ=
+et=3D"_blank" style=3D"color: #000000; text-decoration: none !important; te=
+xt-underline: none; word-wrap: break-word; text-align: center !important; f=
+ont-family: &#39;Arial&#39;,-apple-system,BlinkMacSystemFont,&#39;Segoe UI&=
+#39;,Arial,sans-serif; font-size: 12px; font-weight: 400; line-height: 20px=
+; text-transform: uppercase;">
+                                                        LATEST
+                                                      </a>
+                                                    </th>
+                                                    <th class=3D"menu_bar_i=
+tem last" style=3D"width: 25%; mso-line-height-rule: exactly; font-family: =
+&#39;Arial&#39;,-apple-system,BlinkMacSystemFont,&#39;Segoe UI&#39;,Arial,s=
+ans-serif; font-size: 12px; font-weight: 400; line-height: 20px; color: #00=
+0000; text-transform: uppercase; border-right-width: 1px; border-right-colo=
+r: #000000; border-right-style: none; border-left-width: 1px; border-left-c=
+olor: #000000; border-left-style: solid;" align=3D"center" bgcolor=3D"#ffff=
+ff">
+                                                      <a href=3D"https://sn=
+eakerpolitics.com/_t/c/v3/AABG3c915m-uiibybP3vcxQO4dXjmjc6SV5olBbqE3YyZkUs_=
+_Mompcg2kMrZZTnFfbFPPw0haqKsj2Z1FUgvyJG-56iwZS758jGkUqWrsBCx9cx7OjDuQ1H6LM7=
+khYEMooIudySHGhSL5rl59jCz0c17eeFLOk05enoWlcEzLJXzdg-jRHfafRedWfuPkQwkWLE4BO=
+Njp964UG3ahxCJD-rr_hZ4PsHSfyodpWwNlTRp17POs_vMOyGCHrJbFh2MWzMg9-iWLJglD3ZBl=
+mTrTmBUSZGJGVRLL6QM6ie76gRD68J7AYHgu8WDYv0gJDjH5h2pp6-EXGsT-uCf-NxEj8MI8pNK=
+j2jtPiFIrT5yY9iftwpUJZCS32Xwve16wfw24g-rp6bBlbMzX-o8EGOTWPtRt_UUONLmRvXNx9l=
+BSidUMAzfuBfXaphJu9juqTREn-0A37a9rmjsYpRSTVFVEPC2T3PI9sgEqZwWS4TDJzmCWpQ4-f=
+oVBeP8jCNI01sdclqjceBjC9jVfpDH8nVzkIII9EmKdsiUTtu2ZQ_5q-F" target=3D"_blank=
+" style=3D"color: #000000; text-decoration: none !important; text-underline=
+: none; word-wrap: break-word; text-align: center !important; font-family: =
+&#39;Arial&#39;,-apple-system,BlinkMacSystemFont,&#39;Segoe UI&#39;,Arial,s=
+ans-serif; font-size: 12px; font-weight: 400; line-height: 20px; text-trans=
+form: uppercase;">
+                                                        SALE
+                                                      </a>
+                                                    </th>
+                                                  </tr>
+                                                </tbody></table>
+                                              </td>
+                                            </tr>
+                                          </tbody></table>
+                                        </td>
+                                      </tr>
+                                    </tbody></table>
+                                    <!-- END : SECTION : MAIN -->
+                                  </th>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </center>
+                        </th>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <!-- END : CONTAINER -->
+                  <!-- BEGIN: CONTAINER -->
+                  <table class=3D"container container_footer" cellpadding=
+=3D"0" cellspacing=3D"0" border=3D"0" width=3D"100%" style=3D"border-collap=
+se: collapse; min-width: 100%; direction: ltr;" role=3D"presentation" bgcol=
+or=3D"#ffffff">
+                    <tbody>
+                      <tr>
+                        <th valign=3D"top" style=3D"mso-line-height-rule: e=
+xactly;">
+                          <center style=3D"width: 100%;">
+                            <table border=3D"0" width=3D"600" cellpadding=
+=3D"0" cellspacing=3D"0" align=3D"center" style=3D"width: 600px; min-width:=
+ 600px; max-width: 600px; direction: ltr; margin: auto;" class=3D"email-con=
+tainer" role=3D"presentation">
+                              <tbody>
+                                <tr>
+                                  <th valign=3D"top" class=3D"container_bor=
+der" style=3D"mso-line-height-rule: exactly;">
+                                    <!-- BEGIN : SECTION : FOOTER -->
+                                    <table class=3D"sections_container foot=
+er" data-id=3D"footer" id=3D"section-footer" border=3D"0" width=3D"100%" ce=
+llpadding=3D"0" cellspacing=3D"0" align=3D"center" style=3D"min-width: 100%=
+; direction: ltr;" role=3D"presentation" bgcolor=3D"#ffffff">
+                                      <tbody><tr>
+                                        <td class=3D"section_border" style=
+=3D"mso-line-height-rule: exactly; padding: 30px 20px 20px;" bgcolor=3D"#ff=
+ffff">
+                                          <table border=3D"0" width=3D"100%=
+" cellpadding=3D"0" cellspacing=3D"0" align=3D"center" style=3D"min-width: =
+100%; direction: ltr;" role=3D"presentation">
+                                            <tbody><tr>
+                                              <!-- BEGIN : 2 COLUMNS : SHOP=
+_BLOCK -->
+                                              <th class=3D"section_content"=
+ style=3D"mso-line-height-rule: exactly; padding: 5px 20px;" bgcolor=3D"#ff=
+ffff">
+                                                <table border=3D"0" width=
+=3D"100%" cellpadding=3D"0" cellspacing=3D"0" align=3D"center" style=3D"min=
+-width: 100%; direction: ltr;" role=3D"presentation">
+                                                  <tbody><tr>
+                                                    <!-- BEGIN : Column 1 o=
+f 2 : SHOP_BLOCK -->
+                                                    <th width=3D"50%" class=
+=3D"column_1_of_2 column_shop_block " style=3D"mso-line-height-rule: exactl=
+y; padding-top: 0; padding-bottom: 0;" align=3D"left" bgcolor=3D"#ffffff" v=
+align=3D"top">
+                                                      <table align=3D"cente=
+r" border=3D"0" width=3D"100%" cellpadding=3D"0" cellspacing=3D"0" style=3D=
+"min-width: 100%; direction: ltr;" role=3D"presentation">
+                                                        <!-- Store Website =
+: BEGIN -->
+                                                        <tbody><tr>
+                                                          <th class=3D"colu=
+mn_shop_block1 " width=3D"100%" style=3D"mso-line-height-rule: exactly; pad=
+ding-right: 10px; font-family: &#39;Arial&#39;,-apple-system,BlinkMacSystem=
+Font,&#39;Segoe UI&#39;,Arial,sans-serif; font-size: 14px; line-height: 20p=
+x; font-weight: 400; color: #000000; text-transform: uppercase; padding-bot=
+tom: 0; padding-top: 0;" align=3D"left" bgcolor=3D"#ffffff" valign=3D"top">
+                                                            <a href=3D"http=
+s://sneakerpolitics.com/_t/c/v3/AACqCa3Z8Xm3VOtbYjiOAIK6-gz7wwbp6BIxbGG7sr1=
+1rtoba3HO1mgixWcLTXoEtVVtw53g6_3EZuHGzzM1FarrJ7bgaezjKskt5ntGVQrgMllV-tyZ7T=
+Ll4dN4-Q7yX5AsbcJExShV09vdXDbwP_A9I7hu5vmkSxgXU1bgtizGpE7bQ6LlqXUgmZlr3mP5R=
+Xl3PpdlJXEmIweS5zwXyDEJIEsnGQHELGExBMcjAaPSH-ZPbyhTxa4cSWN68hp8MwXc2zQfGoa5=
+gVzM1KuWQaPtpYlfE82Uj_waiIrc0fm7Bf2Hoi-mioWNO2RlPxUNxc4PA3wQGNV1Uqs7eQ1lMiW=
+3Iiu0p3CccfFf0Hj6xlxOCaPBLOpaZLyjIVBZVncBdWjrPGhbom-hK7hNY6U9qJEq8fXSgt2_z_=
+SbuPw_0FHZzT9JJ6WI_JOsUomXW71MshJ1q4TkQEGGWH-04fzBk7QR0t7IIkJnLr3-vZXdIW74Z=
+zhcHgJ-KQq-xxyJDtV_BrchiR8UXQ=3D=3D" target=3D"_blank" data-key=3D"section_=
+shop_block1" style=3D"color: #000000; text-decoration: none !important; tex=
+t-underline: none; font-size: 14px; font-weight: 400; text-transform: upper=
+case;"></a>
+                                                          </th>
+                                                        </tr>
+                                                        <!-- Store Website =
+: END -->
+                                                        <!-- Store Address =
+: BEGIN -->
+                                                        <tr>
+                                                          <th class=3D"colu=
+mn_shop_block2 " data-key=3D"section_shop_block2" width=3D"100%" style=3D"m=
+so-line-height-rule: exactly; padding-right: 10px; font-family: &#39;Arial&=
+#39;,-apple-system,BlinkMacSystemFont,&#39;Segoe UI&#39;,Arial,sans-serif; =
+font-size: 14px; line-height: 20px; font-weight: 400; color: #000000; text-=
+transform: uppercase; padding-top: 0; padding-bottom: 0;" align=3D"left" bg=
+color=3D"#ffffff" valign=3D"top">
+                                                            Sneaker Politic=
+s<br/>
+                                                            240 Ridge Road<=
+br/>
+                                                            Lafayette, LA 7=
+0506<br/>
+                                                            <br/>
+                                                            Copyright =C2=
+=A9 2026
+                                                          </th>
+                                                        </tr>
+                                                        <!-- Store Address =
+: END -->
+                                                      </tbody></table>
+                                                    </th>
+                                                    <!-- END : Column 1 of =
+2 : SHOP_BLOCK -->
+                                                    <!-- BEGIN : Column 2 o=
+f 2 : SOCIAL_BLOCK -->
+                                                    <th width=3D"50%" class=
+=3D"column_2_of_2 column_social_block " style=3D"mso-line-height-rule: exac=
+tly; padding-top: 0; padding-bottom: 0;" align=3D"right" bgcolor=3D"#ffffff=
+" valign=3D"top">
+                                                      <table align=3D"cente=
+r" border=3D"0" width=3D"100%" cellpadding=3D"0" cellspacing=3D"0" style=3D=
+"min-width: 100%; direction: ltr;" role=3D"presentation">
+                                                        <!-- Social heading=
+ : BEGIN -->
+                                                        <tbody><tr>
+                                                          <th class=3D"colu=
+mn_footer_title " width=3D"100%" style=3D"mso-line-height-rule: exactly; pa=
+dding-left: 10px; font-family: &#39;Arial&#39;,-apple-system,BlinkMacSystem=
+Font,&#39;Segoe UI&#39;,Arial,sans-serif; font-size: 14px; line-height: 20p=
+x; font-weight: 400; color: #000000; text-transform: uppercase;" align=3D"l=
+eft" bgcolor=3D"#ffffff" valign=3D"top">
+                                                            <p data-key=3D"=
+section_footer_title" style=3D"mso-line-height-rule: exactly; direction: lt=
+r; font-family: &#39;Arial&#39;,-apple-system,BlinkMacSystemFont,&#39;Segoe=
+ UI&#39;,Arial,sans-serif; font-size: 14px; line-height: 20px; font-weight:=
+ 400; text-transform: uppercase; color: #000000; margin: 0;" align=3D"left"=
+>FOLLOW</p>
+                                                          </th>
+                                                        </tr>
+                                                        <!-- Social heading=
+ : END -->
+                                                        <!-- Store Address =
+: BEGIN -->
+                                                        <tr>
+                                                          <th class=3D"
+        column_shop_social_icons
+       =20
+      " width=3D"100%" style=3D"mso-line-height-rule: exactly; padding-left=
+: 10px;" align=3D"left" bgcolor=3D"#ffffff" valign=3D"top">
+                                                            <a class=3D"soc=
+ial-link" href=3D"https://sneakerpolitics.com/_t/c/v3/AACQ2lq-GvU7qmikc2fid=
+1dbIg3EJaMvjTHREytsdtJV1hv-aVxqwcVk1UaadEmEJas9r55ku7wCt-swveBGhyC-gF0cauup=
+64AImyNChDF_rG7mA_X8d_NJ2ijtlzkP1q808u1aO48HPyIhsd92aEJAqYX_2GuCW61Bcbebf02=
+fEJCHOXxxM55GUR3Uq7CkZQZ8KvslinMNGIgsA4tHMhT66MZFwBp2VWtikXsLYEF6ayNbmXRzQs=
+zjnUdj0Hjyb7P1LtEc2g3QPV6hIaV3kk1huaaUnq1l0VVGSCeCyxdbmHyC" target=3D"_blan=
+k" title=3D"Facebook" style=3D"color: #000000; text-decoration: none !impor=
+tant; text-underline: none; font-size: 14px;">
+                                                              <img width=3D=
+"32" class=3D"social-icons" alt=3D"Facebook" src=3D"https://www.orderlyemai=
+ls.com/facebook_1.png" style=3D"width: 32px; height: auto !important; verti=
+cal-align: middle; padding: 5px 20px 20px 0;"/>
+                                                            </a>
+                                                            <a class=3D"soc=
+ial-link" href=3D"https://sneakerpolitics.com/_t/c/v3/AACOWW1dm_N93OoyOHpwe=
+O6WRE8vIQbNjN17oHk22KIAdezYqQa-CeWg--I2-TVDSLYpC6GiAMzwUB3TUQWnZbcSs1Rl80dI=
+806-f_t-RfG0HmcK9NOv5ctqvmzLPdSVMKcG10Hud1TishwGK4s02kDtZqxZ55NKvlSMrmXfL8W=
+ASqVTixF1kh_Jc5SodVRnyL0fviESqjIYsCS2tcGkgaTrOtIwcyML3FHfBhSSlM19OVi_vbdNaG=
+viCmvncFVQwyaNVr4CZqePYjiKXDjYH79gDnplcRN68g=3D=3D" target=3D"_blank" title=
+=3D"X.com" style=3D"color: #000000; text-decoration: none !important; text-=
+underline: none; font-size: 14px;">
+                                                              <img width=3D=
+"32" class=3D"social-icons" alt=3D"X.com" src=3D"https://www.orderlyemails.=
+com/xcom_1.png" style=3D"width: 32px; height: auto !important; vertical-ali=
+gn: middle; padding: 5px 20px 20px 0;"/>
+                                                            </a>
+                                                            <a class=3D"soc=
+ial-link" href=3D"https://sneakerpolitics.com/_t/c/v3/AADB4niT66Gg2GixcmD-N=
+8IB772pfDMBNyDuCEF5rLsn6JfEWNC_FCAHlYJG7AG0qO9H4fxprkK03SaW1oMjhTx3YaVVAyI5=
+o0ZknAu4LLMUXoYK8bLbYWyXDe9FWLn6uUyer39ikCLEGSIrtwQs1wCGG97SB9laPpGGQgWAOdE=
+vcHFhKEkBOxAKe5A8gp0K0XQ4Aoip2Lmd09ieTbh1WI2aiQCXjuMa18dMrNGbkc88V0bwkWGHFE=
+RvUuk5Hrx6yCFn-r_f1r9H_FIEVGnV-FWLYVH0lshh8fEn-T87dFQ9RCh9w_M=3D" target=3D=
+"_blank" title=3D"Instagram" style=3D"color: #000000; text-decoration: none=
+ !important; text-underline: none; font-size: 14px;">
+                                                              <img width=3D=
+"32" class=3D"social-icons" alt=3D"Instagram" src=3D"https://www.orderlyema=
+ils.com/instagram_1.png" style=3D"width: 32px; height: auto !important; ver=
+tical-align: middle; padding: 5px 20px 20px 0;"/>
+                                                            </a>
+                                                            <a class=3D"soc=
+ial-link" href=3D"https://sneakerpolitics.com/_t/c/v3/AAB4D6U4oJlx0hiZpfWnx=
+cTFLqOYzPsaBkNs58VEE-CdT061tLPH-1GueNWgVXcV9x5LmpLY0MzI_3FJnR4CeMi-SWb0f1an=
+WreSIpXKHaStHpUrAgyxv7cYLmMN6fRrZm0coENiknDpBWhs1oMDTPXUhrCVbRSsprsDpxRHexD=
+-hC8eGuDIVyuKvIAZpk90GsWY09ZHaLaMYkgJ94E7X4T-TN8R9Ws0xF-A_F1FVCtxQX5zuJGizU=
+ZV6wwisS2wGp_g4xUuuvJPkEBrWnmJQg-6ONLxZzCIMyBylkrbGfPRgO4=3D" target=3D"_bl=
+ank" title=3D"TikTok" style=3D"color: #000000; text-decoration: none !impor=
+tant; text-underline: none; font-size: 14px;">
+                                                              <img width=3D=
+"32" class=3D"social-icons" alt=3D"TikTok" src=3D"https://www.orderlyemails=
+.com/tiktok_1.png" style=3D"width: 32px; height: auto !important; vertical-=
+align: middle; padding: 5px 0 20px;"/>
+                                                            </a>
+                                                          </th>
+                                                        </tr>
+                                                      </tbody></table>
+                                                    </th>
+                                                    <!-- END : Column 2 of =
+2 : SOCIAL_BLOCK -->
+                                                  </tr>
+                                                </tbody></table>
+                                              </th>
+                                              <!-- END : 2 COLUMNS : SOCIAL=
+_BLOCK -->
+                                            </tr>
+                                            <tr>
+                                              <th height=3D"1" border=3D"0"=
+ style=3D"height: 1px; line-height: 1px; font-size: 1px; mso-line-height-ru=
+le: exactly; padding: 0;" bgcolor=3D"#ffffff">
+                                                <img id=3D"open-image" src=
+=3D"https://sneakerpolitics.com/tools/emails/open/order-confirmation/1" alt=
+=3D"" width=3D"1" height=3D"1" border=3D"0"/>
+                                              </th>
+                                            </tr>
+                                          </tbody></table>
+                                        </td>
+                                      </tr>
+                                    </tbody></table>
+                                    <!-- END : SECTION : FOOTER -->
+                                  </th>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </center>
+                        </th>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <!-- END : CONTAINER -->
+               =20
+             =20
+
+</body></html>
+--2114f9d8ef6e6af34ada40d8a17f362738c2bc14ac0f4cd56846428f6a88--

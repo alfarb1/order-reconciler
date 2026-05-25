@@ -1,0 +1,31 @@
+# KNET Reconciler config. Safe to commit (no secrets).
+
+[knet]
+# These lines are used to confirm a retailer email was actually shipped TO KNET.
+# Match is case-insensitive and whitespace-tolerant. At least one must appear in
+# the email body for the email to count as outbound-to-KNET.
+# TODO(user): paste your KNET warehouse address lines here, one per line.
+warehouse_address_lines = [
+  "KNET",
+  "1709 Imperial Way",
+  # TODO(user): add suite/unit, city, state, zip if you want stricter matching.
+]
+sender_domain = "knetgroup.com"
+
+[reconcile]
+# Days after ship_date before a shipment without a receipt is flagged as missing
+# (rather than 'pending / in transit').
+stale_days = 14
+# How far back to look when fetching emails. Mirrors the Gmail q= newer_than:Nd.
+lookback_days = 180
+
+[gmail]
+# Override the default Gmail search queries if you need to.
+outbound_query = "(subject:(shipped OR \"your order\" OR \"order confirmation\" OR tracking OR dispatched) OR from:(noreply OR no-reply OR shipping OR orders)) -from:knetgroup.com newer_than:180d"
+knet_query = "from:knetgroup.com newer_than:180d"
+
+[retailers]
+# Force a specific parser for a sender domain when the generic parser misclassifies it.
+# [[retailers.overrides]]
+# from_domain = "shop.example.com"
+# parser = "shopify"
