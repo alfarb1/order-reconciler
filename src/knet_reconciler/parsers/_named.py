@@ -13,13 +13,13 @@ from __future__ import annotations
 
 from ..db import Email
 from .base import ParserKind, ParseResult
-from .generic import GenericParser, address_matches, _text_from_email
+from .generic import GenericParser, address_matches, _text_from_email, is_shipment_subject
 
 
 class NamedRetailerParser(GenericParser):
     retailer: str = "unknown"
     domains: tuple[str, ...] = ()
-    subject_hints: tuple[str, ...] = ()
+    subject_hints: tuple[str, ...] = ()  # legacy/unused — kept for backwards compat
     confidence_floor: float = 0.85
 
     name = "named"
@@ -30,12 +30,14 @@ class NamedRetailerParser(GenericParser):
         dom = (email.from_domain or "").lower()
         if not any(dom == d or dom.endswith("." + d) for d in self.domains):
             return False
-        if self.subject_hints:
-            subj = (email.subject or "").lower()
-            if not any(h in subj for h in self.subject_hints):
-                return False
+        if not is_shipment_subject(email.subject):
+            return False
         text = _text_from_email(email)
-        return address_matches(text, self._address_lines)
+        if not text:
+            return False
+        if address_matches(text, self._address_lines):
+            return True
+        return self._matches_via_order_lookup(email, text)
 
     def parse(self, email: Email) -> ParseResult | None:
         result = super().parse(email)

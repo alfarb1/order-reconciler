@@ -19,6 +19,13 @@ from sqlalchemy.orm import Session
 
 from .db import Email, Match, Receipt, Shipment
 from .parsers.base import ParseResult, ParserKind, registry
+from .parsers.generic import (
+    _extract_order_numbers,
+    _root_domain,
+    _text_from_email,
+    address_matches,
+    set_verified_orders,
+)
 
 log = logging.getLogger(__name__)
 
@@ -36,12 +43,35 @@ def _domain_of(email: Email) -> str:
     return (email.from_domain or "").lower()
 
 
+def _build_verified_orders(session: Session, warehouse_address_lines: list[str]) -> set[tuple[str, str]]:
+    """Pre-pass over ALL cached emails (parsed or not). Whenever an email body contains the
+    KNET warehouse address, every order number it mentions is treated as "address-verified"
+    for that retailer's root domain. Shipment-notification emails that lack the address inline
+    can then be accepted by cross-referencing their order number against this index."""
+    verified: set[tuple[str, str]] = set()
+    for email in session.query(Email).all():
+        if email.from_domain and email.from_domain.endswith("knetgroup.com"):
+            continue
+        text = _text_from_email(email)
+        if not text or not address_matches(text, warehouse_address_lines):
+            continue
+        root = _root_domain(email.from_domain)
+        if not root:
+            continue
+        haystack = (email.subject or "") + "\n" + text
+        for order_num in _extract_order_numbers(haystack):
+            verified.add((root, order_num))
+    return verified
+
+
 def parse_all(session: Session, warehouse_address_lines: list[str]) -> dict:
     """Run registered parsers across every email row that hasn't been parsed yet.
 
     Writes Shipment / Receipt rows. Returns counts for the caller.
     """
     counts = {"emails_parsed": 0, "shipments_added": 0, "receipts_added": 0, "skipped": 0, "errors": 0}
+
+    set_verified_orders(_build_verified_orders(session, warehouse_address_lines))
 
     emails = session.query(Email).filter(Email.parsed.is_(False)).all()
     for email in emails:
@@ -79,17 +109,17 @@ def parse_all(session: Session, warehouse_address_lines: list[str]) -> dict:
 
 
 def _persist_shipments(session: Session, email: Email, result: ParseResult) -> int:
-    """Write one or more Shipment rows for a parsed retailer email. Idempotent."""
+    """Write one or more Shipment rows for a parsed retailer email. Idempotent globally —
+    a given tracking number produces exactly one Shipment row regardless of how many emails
+    reference it (e.g., 'shipped' + 'out for delivery' + 'delivered' for the same package)."""
     added = 0
     for carrier, normalized in result.tracking or [(None, None)]:
-        existing = session.execute(
-            select(Shipment).where(
-                Shipment.email_id == email.gmail_id,
-                Shipment.tracking_number_normalized == normalized,
-            )
-        ).scalar_one_or_none()
-        if existing is not None:
-            continue
+        if normalized:
+            existing = session.execute(
+                select(Shipment).where(Shipment.tracking_number_normalized == normalized)
+            ).scalar_one_or_none()
+            if existing is not None:
+                continue
         session.add(
             Shipment(
                 email_id=email.gmail_id,
@@ -115,16 +145,16 @@ def _persist_shipments(session: Session, email: Email, result: ParseResult) -> i
 
 
 def _persist_receipts(session: Session, email: Email, result: ParseResult) -> int:
+    """KNET emits 'received' and 'checked in' for the same package — dedupe globally
+    on the normalized tracking number so we don't double-count receipts."""
     added = 0
     for carrier, normalized in result.tracking or []:
-        existing = session.execute(
-            select(Receipt).where(
-                Receipt.email_id == email.gmail_id,
-                Receipt.tracking_number_normalized == normalized,
-            )
-        ).scalar_one_or_none()
-        if existing is not None:
-            continue
+        if normalized:
+            existing = session.execute(
+                select(Receipt).where(Receipt.tracking_number_normalized == normalized)
+            ).scalar_one_or_none()
+            if existing is not None:
+                continue
         session.add(
             Receipt(
                 email_id=email.gmail_id,

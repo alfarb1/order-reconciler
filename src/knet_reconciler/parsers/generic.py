@@ -33,6 +33,74 @@ PRICE_RE = re.compile(r"([\$£€])\s*(\d{1,4}(?:[,.]\d{2})?)")
 SKU_RE = re.compile(r"\b(?:sku|style)[:\s#]*([A-Z0-9][A-Z0-9\-]{3,20})\b", re.IGNORECASE)
 
 
+# Subject-line classifier. Retailers email about lots of things — orders received,
+# orders shipped, orders cancelled, refunds, returns. Only "shipped"-shaped emails
+# carry a tracking number that should become a Shipment row.
+_NON_SHIPMENT_SUBJECT_PATTERNS = (
+    "order confirmation",
+    "order received",
+    "received your order",
+    "thanks for your order",
+    "thank you for your order",
+    "we've received",
+    "we just received",
+    "we got your order",
+    "we've got your order",
+    "order placed",
+    "cancel",        # cancelled, canceled, cancellation
+    "refund",
+    "your return",
+    "return request",
+    "return label",
+    "returned",
+)
+_SHIPMENT_SUBJECT_PATTERNS = (
+    "shipped",
+    "shipment",
+    "shipping confirmation",
+    "on the way",
+    "on its way",
+    "out for delivery",
+    "dispatched",
+    "delivered",
+    "tracking",
+    "has been sent",
+    "has been mailed",
+)
+
+
+def is_shipment_subject(subject: str | None) -> bool:
+    s = (subject or "").lower()
+    if not s:
+        return False
+    if any(p in s for p in _NON_SHIPMENT_SUBJECT_PATTERNS):
+        return False
+    return any(p in s for p in _SHIPMENT_SUBJECT_PATTERNS)
+
+
+def _root_domain(domain: str | None) -> str:
+    parts = (domain or "").lower().split(".")
+    if len(parts) >= 2:
+        return ".".join(parts[-2:])
+    return (domain or "").lower()
+
+
+def _extract_order_numbers(text: str) -> list[str]:
+    return [m.group(1).upper() for m in ORDER_NUMBER_RE.finditer(text or "")]
+
+
+# Cross-reference index built once per parse run (see reconcile.parse_all).
+# Maps (root_domain, order_number_upper) -> has_address. When a shipment-notification
+# email lacks the address inline (Reebok pattern), we accept it if the same retailer's
+# earlier order-confirmation email had the address and the order number matches.
+_VERIFIED_ORDERS: set[tuple[str, str]] = set()
+
+
+def set_verified_orders(pairs: set[tuple[str, str]]) -> None:
+    _VERIFIED_ORDERS.clear()
+    _VERIFIED_ORDERS.update(pairs)
+
+
 def _text_from_email(email: Email) -> str:
     if email.raw_text:
         return email.raw_text
@@ -108,16 +176,32 @@ class GenericParser(Parser):
     def matches(self, email: Email) -> bool:
         if email.from_domain and email.from_domain.endswith("knetgroup.com"):
             return False
+        if not is_shipment_subject(email.subject):
+            return False
         text = _text_from_email(email)
         if not text:
             return False
-        return address_matches(text, self._address_lines)
+        if address_matches(text, self._address_lines):
+            return True
+        return self._matches_via_order_lookup(email, text)
+
+    def _matches_via_order_lookup(self, email: Email, text: str) -> bool:
+        if not _VERIFIED_ORDERS:
+            return False
+        root = _root_domain(email.from_domain)
+        if not root:
+            return False
+        haystack = (email.subject or "") + "\n" + text
+        for order_num in _extract_order_numbers(haystack):
+            if (root, order_num) in _VERIFIED_ORDERS:
+                return True
+        return False
 
     def parse(self, email: Email) -> ParseResult | None:
         text = _text_from_email(email)
         if not text:
             return None
-        if not address_matches(text, self._address_lines):
+        if not address_matches(text, self._address_lines) and not self._matches_via_order_lookup(email, text):
             return None  # safety net — should have been filtered by matches()
 
         tracking = extract_tracking(text + " " + (email.raw_html or ""))
