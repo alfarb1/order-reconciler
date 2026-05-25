@@ -154,6 +154,62 @@ def run(
 
 
 @app.command()
+def weekly(
+    reports_dir: Path = typer.Option(Path("reports"), help="Directory for date-stamped weekly reports."),
+):
+    """Weekly scheduled run. Writes both reconciliation.xlsx (latest) and reports/reconciliation-YYYY-MM-DD.xlsx.
+
+    Prints a single-line summary as the LAST line of stdout so the Task Scheduler wrapper can parse it:
+        SUMMARY missing=N matched=N pending=N orphans=N total=N report=<path>
+    """
+    from datetime import date
+    cfg = load_config()
+    _register_parsers(cfg)
+    SessionFactory = make_session_factory(cfg.paths.db)
+
+    # Same flow as run: fetch -> parse -> reconcile -> report
+    fetch(since=None)
+    parse(reparse=False)
+    reconcile_cmd()
+
+    reports_dir.mkdir(parents=True, exist_ok=True)
+    dated = reports_dir / f"reconciliation-{date.today().isoformat()}.xlsx"
+    latest = Path("reconciliation.xlsx")
+
+    with SessionFactory() as session:
+        write_xlsx(session, dated, stale_days=cfg.reconcile.stale_days)
+        try:
+            write_xlsx(session, latest, stale_days=cfg.reconcile.stale_days)
+        except PermissionError:
+            # User has the latest file open in Excel — skip the overwrite, keep the dated copy.
+            console.print(f"[yellow]Skipped {latest} (file is open). Use {dated} instead.[/]")
+
+        from .db import Shipment
+        from .reconcile import (
+            FLAG_MISSING,
+            FLAG_PENDING,
+            MATCH_TRACKING,
+            orphan_receipts,
+        )
+        from sqlalchemy import func, select
+        from .db import Match
+
+        total = session.query(Shipment).count()
+        matched = session.query(Match).filter(Match.match_type == MATCH_TRACKING).count()
+        missing = session.query(Match).filter(Match.flagged_reason == FLAG_MISSING).count()
+        pending = session.query(Match).filter(Match.flagged_reason == FLAG_PENDING).count()
+        orphans = len(orphan_receipts(session))
+
+    console.print(f"[green]Wrote[/] {dated}")
+    console.print(f"[green]Wrote[/] {latest}")
+    # Machine-parsable last line for the PowerShell wrapper.
+    print(
+        f"SUMMARY missing={missing} matched={matched} pending={pending} "
+        f"orphans={orphans} total={total} report={dated.resolve()}"
+    )
+
+
+@app.command()
 def review():
     """Interactive resolver for low-confidence parses and orphan receipts."""
     cfg = load_config()

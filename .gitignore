@@ -9,8 +9,10 @@ token.json
 *.db
 knet_reconciler.sqlite*
 exports/
+reports/
 *.xlsx
 *.csv
+*.log
 
 # Python
 __pycache__/
