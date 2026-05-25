@@ -103,3 +103,15 @@ class TestExtractFromText:
         )
         nums = {r.number for r in extract_tracking(text)}
         assert {"1Z999AA10123456784", "987654321098", "JJD000999888777"} <= nums
+
+    def test_fedex_smartpost_impb_yields_embedded_fedex(self):
+        # KNET's receiving station scans the 34-digit USPS IMpb barcode, but the retailer
+        # only emails the underlying 12-digit FedEx tracking. We normalize both to the
+        # embedded FedEx number so they reconcile.
+        html = (
+            '<b class="info-content-data">9622001900005761142600871951957302</b>'
+        )
+        nums = [(r.carrier, r.number) for r in extract_tracking(html)]
+        assert (FEDEX, "871951957302") in nums
+        # And the 34-digit form itself should not be emitted — it has no match value.
+        assert all(n != "9622001900005761142600871951957302" for _, n in nums)

@@ -43,6 +43,19 @@ _DHL_PREFIX_RE = re.compile(r"\b(JJD\d{10,18}|JD\d{12,16})\b")
 _DHL_BARE_RE = re.compile(r"\b(\d{10,11})\b")
 _DHL_RE = re.compile(r"\b(JJD\d{10,18}|JD\d{12,16}|\d{10,11})\b")
 
+# FedEx SmartPost / Ground Economy hands off the last mile to USPS. The physical label
+# carries a 34-digit USPS IMpb GS1-128 barcode starting with `96`, with the 12-digit
+# FedEx tracking embedded as the last 12 digits. KNET's receiving station scans the
+# IMpb (so KNET emails contain the 34-digit form); retailers email only the underlying
+# FedEx 12-digit form. We normalize both to the embedded FedEx tracking so they match.
+_IMPB34_RE = re.compile(r"\b(96\d{32})\b")
+
+
+def _embedded_fedex_from_impb34(n: str) -> str | None:
+    if not n or len(n) != 34 or not n.startswith("96") or not n.isdigit():
+        return None
+    return n[-12:]
+
 # Carrier-context patterns: the carrier name or hostname appearing in the email
 # body. Bare-numeric DHL/FedEx matches require this — without it, any 10-15 digit
 # run (order IDs, phone numbers, template placeholders) gets misclassified.
@@ -182,6 +195,13 @@ def _scan_text(text: str, hint: Carrier = UNKNOWN) -> list[Tracking]:
         detected = detect_carrier_from_number(n)
         chosen = detected if detected != UNKNOWN else (carrier if carrier != UNKNOWN else hint)
         found.append(Tracking(carrier=chosen, number=n))
+
+    # 34-digit FedEx SmartPost IMpb — emit only the embedded FedEx tracking. This makes
+    # KNET's IMpb-scanned receipts match the retailer-emailed FedEx 12-digit form.
+    for m in _IMPB34_RE.finditer(text):
+        fedex = _embedded_fedex_from_impb34(m.group(1))
+        if fedex:
+            add(FEDEX, fedex)
 
     # Unambiguous formats (strict regex + prefix) — always accept.
     for m in _UPS_RE.finditer(text):
