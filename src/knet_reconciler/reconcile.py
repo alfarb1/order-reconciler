@@ -27,6 +27,7 @@ from .parsers.generic import (
     is_cancellation_subject,
     set_verified_orders,
 )
+from .tracking import extract_tracking
 
 log = logging.getLogger(__name__)
 
@@ -210,6 +211,22 @@ def _as_utc(dt: datetime | None) -> datetime | None:
     return dt
 
 
+def _build_delivered_tracking_set(session: Session) -> set[str]:
+    """Tracking numbers for which the carrier (via the retailer) has confirmed delivery.
+    If KNET still hasn't acknowledged receipt for one of these, the package is missing
+    *now*, not 'wait stale_days more'."""
+    delivered: set[str] = set()
+    rows = session.query(Email).filter(Email.subject.ilike("%delivered%")).all()
+    for e in rows:
+        if e.from_domain and e.from_domain.endswith("knetgroup.com"):
+            continue
+        body = (e.raw_text or "") + " " + (e.raw_html or "")
+        for t in extract_tracking(body):
+            if t.number:
+                delivered.add(t.number)
+    return delivered
+
+
 def reconcile(session: Session, stale_days: int = 14) -> dict:
     """Build/refresh the matches table. Idempotent — upserts per shipment_id."""
     shipments = session.query(Shipment).all()
@@ -221,6 +238,8 @@ def reconcile(session: Session, stale_days: int = 14) -> dict:
         if not key:
             continue
         by_tracking.setdefault(key, []).append(r)
+
+    delivered_tracking = _build_delivered_tracking_set(session)
 
     counts = {"matched": 0, "missing": 0, "pending": 0, "orphans": 0, "total_shipments": len(shipments)}
     now = _utcnow()
@@ -249,7 +268,7 @@ def reconcile(session: Session, stale_days: int = 14) -> dict:
             age_days = (now - ship_dt).days
             match.receipt_id = None
             match.match_type = MATCH_NONE
-            if age_days > stale_days:
+            if s.tracking_number_normalized in delivered_tracking or age_days > stale_days:
                 match.flagged_reason = FLAG_MISSING
                 counts["missing"] += 1
             else:

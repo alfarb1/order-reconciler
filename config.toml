@@ -21,7 +21,12 @@ lookback_days = 180
 
 [gmail]
 # Override the default Gmail search queries if you need to.
-outbound_query = "(subject:(shipped OR \"your order\" OR \"order confirmation\" OR tracking OR dispatched) OR from:(noreply OR no-reply OR shipping OR orders)) -from:knetgroup.com newer_than:180d"
+# The outbound filter has to be permissive — Shopify-hosted boutiques send shipment
+# notifications from `store+<id>@t.shopifyemail.com` with subjects like "A shipment
+# from order #33720 is on the way", which never match the narrow noreply/shipped
+# heuristics. False positives are cheap (the parser rejects them) but false negatives
+# silently lose shipments.
+outbound_query = "(subject:(shipped OR shipment OR \"your order\" OR \"order confirmation\" OR confirmed OR tracking OR dispatched OR \"on the way\" OR \"on its way\" OR \"out for delivery\" OR delivered) OR from:(noreply OR no-reply OR shipping OR orders OR shopifyemail OR shopify)) -from:knetgroup.com newer_than:180d"
 knet_query = "from:knetgroup.com newer_than:180d"
 
 [retailers]
