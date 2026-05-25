@@ -82,8 +82,29 @@ class TestGenericParser:
         assert result.size == "10.5"
         assert result.price == 250.0
         assert result.currency == "USD"
-        assert result.retailer == "shop"
+        # Without a display name in From, retailer falls back to the registrable domain
+        # ("shop.example.com" -> "Example") — the leftmost subdomain is junk noise like
+        # "emails", "t", "store" that doesn't identify the brand.
+        assert result.retailer == "Example"
         assert 0.3 <= result.confidence <= 0.7
+
+    def test_retailer_extracted_from_display_name(self, parser):
+        body = (
+            "Hi! Your order #ABC-12345 has shipped.\n"
+            "Ship to: KNET\n123 Sneaker Way\nSuite 200\nInglewood, CA 90301\n"
+            "Tracking: 1Z999AA10123456784\n"
+        )
+        email = Email(
+            gmail_id="g2", thread_id="t1",
+            from_address='"Reynolds & Sons" <store+12345@t.shopifyemail.com>',
+            from_domain="t.shopifyemail.com",
+            subject="A shipment from order #ABC-12345 has shipped",
+            received_at=datetime(2026, 5, 1, tzinfo=timezone.utc),
+            snippet=None, raw_text=body, raw_html=None, parsed=False,
+        )
+        result = parser.parse(email)
+        assert result is not None
+        assert result.retailer == "Reynolds & Sons"
 
     def test_returns_none_when_no_tracking(self, parser):
         body = "Ship to: KNET\n123 Sneaker Way\n(no tracking yet)"

@@ -11,7 +11,7 @@ import re
 
 from ..db import Email
 from ._named import NamedRetailerParser
-from .generic import _text_from_email, address_matches
+from .generic import _text_from_email, address_matches, retailer_from_email
 
 SHOPIFY_HOSTS = ("myshopify.com", "shopifyemail.com", "shopify.com")
 SHOPIFY_ORDER_RE = re.compile(r"#\d{4,7}\b")
@@ -38,13 +38,13 @@ class ShopifyParser(NamedRetailerParser):
         return address_matches(text, self._address_lines)
 
     def parse(self, email: Email):
-        # Prefer the from-domain hostname (often the shop's own name) over the
-        # generic parser's first-label heuristic.
         result = super().parse(email)
         if result is None:
             return None
-        if email.from_domain:
-            parts = email.from_domain.split(".")
-            if len(parts) >= 2:
-                result.retailer = parts[-2]
+        # Prefer the display name from the From header — Shopify-hosted shops always
+        # set it (e.g. "Reynolds & Sons" <store+...@t.shopifyemail.com>) and the
+        # domain alone says nothing about the brand.
+        name = retailer_from_email(email)
+        if name:
+            result.retailer = name
         return result

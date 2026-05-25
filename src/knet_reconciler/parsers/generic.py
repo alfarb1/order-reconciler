@@ -131,6 +131,47 @@ def _normalize_for_match(s: str) -> str:
     return re.sub(r"\s+", " ", s).strip().lower()
 
 
+# Senders we want to skip when falling back to the domain — these are mailers/platforms
+# that route many distinct retailers under one umbrella, so the domain alone tells us
+# nothing about the brand.
+_PLATFORM_DOMAINS = {
+    "shopifyemail.com", "shopify.com", "myshopify.com",
+    "shippingeasy.com", "klaviyomail.com", "narvar.com",
+    "fanaticsretailgroup.com", "getredo.com",
+    "salesforce.com", "mailgun.org", "sendgrid.net",
+}
+
+_FROM_NAME_RE = re.compile(r'^\s*"?(.+?)"?\s*<')
+
+
+def retailer_from_email(email: "Email") -> str | None:
+    """Extract a human-readable retailer name from an email's From header.
+
+    Prefers the display name (e.g. `Reebok <hello@emails.reebok.com>` -> "Reebok",
+    `Reynolds & Sons <store+...@t.shopifyemail.com>` -> "Reynolds & Sons"). Falls
+    back to the second-level domain (`emails.reebok.com` -> "Reebok") only when
+    the display name is missing AND the domain isn't a shared mail platform —
+    "shopifyemail" or "getredo" tells us nothing about which brand sent the email.
+    """
+    addr = getattr(email, "from_address", "") or ""
+    m = _FROM_NAME_RE.match(addr)
+    if m:
+        name = m.group(1).strip().strip('"').strip()
+        if name and "@" not in name:
+            return name
+    domain = (getattr(email, "from_domain", "") or "").lower()
+    if not domain:
+        return None
+    parts = domain.split(".")
+    if len(parts) >= 2:
+        registrable = ".".join(parts[-2:])
+        if registrable in _PLATFORM_DOMAINS:
+            return None  # platform alone doesn't identify the brand
+        brand = parts[-2]
+        return brand.replace("-", " ").title() if brand else None
+    return None
+
+
 def address_matches(text: str, address_lines: list[str]) -> bool:
     """True if ANY configured address line appears in `text`, ignoring whitespace and case."""
     if not address_lines:
@@ -223,7 +264,7 @@ class GenericParser(Parser):
         if not tracking:
             return None  # no tracking → useless for reconciliation
 
-        retailer = (email.from_domain or "").split(".")[0] if email.from_domain else None
+        retailer = retailer_from_email(email)
 
         order_match = ORDER_NUMBER_RE.search(text)
         order_number = order_match.group(1) if order_match else None
