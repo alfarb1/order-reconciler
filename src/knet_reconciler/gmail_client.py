@@ -26,7 +26,10 @@ from .db import Email
 
 log = logging.getLogger(__name__)
 
-SCOPES = ["https://www.googleapis.com/auth/gmail.readonly"]
+# `gmail.modify` lets us apply labels to messages (for the KNET-Missing folder).
+# It allows changing labels/metadata but NOT deleting messages or modifying body
+# content — strictly the smallest scope that supports labelling.
+SCOPES = ["https://www.googleapis.com/auth/gmail.modify"]
 
 
 @dataclass
@@ -109,10 +112,27 @@ def _parse_received_at(headers: list[dict]) -> datetime | None:
 
 
 def authenticate(credentials_path: Path, token_path: Path) -> Credentials:
-    """Run the OAuth desktop-app flow. Writes token.json. Reuses it on later calls."""
+    """Run the OAuth desktop-app flow. Writes token.json. Reuses it on later calls.
+
+    If an existing token doesn't cover the current SCOPES (e.g. after a scope
+    expansion from readonly to modify), the token is discarded and we re-run
+    the full browser flow. Note: Google does not let you upgrade scopes via
+    refresh — only via a fresh consent flow."""
     creds: Credentials | None = None
     if token_path.exists():
-        creds = Credentials.from_authorized_user_file(str(token_path), SCOPES)
+        # Inspect the token file directly so we can detect a scope mismatch
+        # BEFORE handing the file to google-auth, which silently overrides
+        # the stored scopes with whatever we pass in.
+        try:
+            import json
+            saved = set(json.loads(token_path.read_text()).get("scopes") or [])
+        except Exception:
+            saved = set()
+        if saved and set(SCOPES).issubset(saved):
+            creds = Credentials.from_authorized_user_file(str(token_path), SCOPES)
+        else:
+            log.info("token scopes %s do not cover %s — re-authenticating", saved, SCOPES)
+            token_path.unlink()
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
@@ -189,6 +209,41 @@ class GmailClient:
             if gmail_id in seen:
                 continue
             yield self.get_message(gmail_id)
+
+    def get_or_create_label(self, name: str) -> str:
+        """Return the Gmail label ID for `name`, creating it if necessary."""
+        existing = self._service.users().labels().list(userId="me").execute().get("labels", []) or []
+        for lbl in existing:
+            if lbl.get("name") == name:
+                return lbl["id"]
+        body = {
+            "name": name,
+            "labelListVisibility": "labelShow",
+            "messageListVisibility": "show",
+        }
+        created = self._service.users().labels().create(userId="me", body=body).execute()
+        log.info("created Gmail label %s (%s)", name, created.get("id"))
+        return created["id"]
+
+    def add_label(self, message_id: str, label_id: str) -> bool:
+        """Apply `label_id` to `message_id`. Returns True if the label was newly added,
+        False if the message already had it (idempotent — Gmail accepts redundant adds
+        silently but we check to avoid noise in logs)."""
+        try:
+            msg = (
+                self._service.users().messages()
+                .get(userId="me", id=message_id, format="minimal")
+                .execute()
+            )
+        except HttpError as e:
+            log.warning("could not fetch %s for labelling: %s", message_id, e)
+            return False
+        if label_id in (msg.get("labelIds") or []):
+            return False
+        self._service.users().messages().modify(
+            userId="me", id=message_id, body={"addLabelIds": [label_id]}
+        ).execute()
+        return True
 
 
 def cache_messages(session: Session, messages: Iterable[FetchedMessage]) -> int:

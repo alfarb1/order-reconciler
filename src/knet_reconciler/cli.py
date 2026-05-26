@@ -153,9 +153,51 @@ def run(
     report(xlsx=xlsx, csv=csv, open_after=open_after)
 
 
+@app.command(name="label-missing")
+def label_missing(
+    label: str = typer.Option("KNET-Missing", help="Gmail label name to apply to source emails of missing shipments."),
+):
+    """Apply a Gmail label to every email backing a currently-missing shipment.
+
+    Idempotent — emails that already carry the label are skipped. Requires the
+    gmail.modify OAuth scope; if the existing token only has gmail.readonly,
+    `knet-reconcile auth` will re-run the browser flow to grant the new permission."""
+    cfg = load_config()
+    SessionFactory = make_session_factory(cfg.paths.db)
+    client = _build_client(cfg)
+
+    with SessionFactory() as session:
+        from .db import Match, Shipment
+        from .reconcile import FLAG_MISSING
+        missing_email_ids = [
+            row[0] for row in session.query(Shipment.email_id)
+            .join(Match, Match.shipment_id == Shipment.id)
+            .filter(Match.flagged_reason == FLAG_MISSING)
+            .distinct()
+            .all()
+            if row[0]
+        ]
+
+    if not missing_email_ids:
+        console.print("[dim]No missing shipments — nothing to label.[/]")
+        return
+
+    label_id = client.get_or_create_label(label)
+    added = 0
+    skipped = 0
+    for gmail_id in missing_email_ids:
+        if client.add_label(gmail_id, label_id):
+            added += 1
+        else:
+            skipped += 1
+    console.print(f"[green]Labelled[/] {added} new, {skipped} already-tagged — Gmail label: [bold]{label}[/]")
+
+
 @app.command()
 def weekly(
     reports_dir: Path = typer.Option(Path("reports"), help="Directory for date-stamped weekly reports."),
+    apply_label: bool = typer.Option(True, "--label/--no-label", help="Apply the KNET-Missing Gmail label to missing-shipment emails."),
+    label: str = typer.Option("KNET-Missing", help="Label name when --label is on."),
 ):
     """Weekly scheduled run. Writes both reconciliation.xlsx (latest) and reports/reconciliation-YYYY-MM-DD.xlsx.
 
@@ -202,6 +244,13 @@ def weekly(
 
     console.print(f"[green]Wrote[/] {dated}")
     console.print(f"[green]Wrote[/] {latest}")
+
+    if apply_label and missing:
+        try:
+            label_missing(label=label)
+        except Exception as e:
+            console.print(f"[yellow]Label step failed (continuing):[/] {e}")
+
     # Machine-parsable last line for the PowerShell wrapper.
     print(
         f"SUMMARY missing={missing} matched={matched} pending={pending} "
