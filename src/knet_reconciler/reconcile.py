@@ -241,7 +241,10 @@ def reconcile(session: Session, stale_days: int = 14) -> dict:
 
     delivered_tracking = _build_delivered_tracking_set(session)
 
-    counts = {"matched": 0, "missing": 0, "pending": 0, "orphans": 0, "total_shipments": len(shipments)}
+    counts = {
+        "matched": 0, "missing": 0, "pending": 0, "orphans": 0,
+        "manually_resolved": 0, "total_shipments": len(shipments),
+    }
     now = _utcnow()
     matched_receipt_ids: set[int] = set()
 
@@ -250,6 +253,15 @@ def reconcile(session: Session, stale_days: int = 14) -> dict:
         if match is None:
             match = Match(shipment_id=s.id, match_type=MATCH_NONE)
             session.add(match)
+
+        # User-confirmed resolution via the web UI is sacred — leave it alone.
+        # If they manually paired it to a receipt, count that receipt as matched
+        # so it doesn't show up as an orphan.
+        if match.match_type == MATCH_MANUAL:
+            if match.receipt_id is not None:
+                matched_receipt_ids.add(match.receipt_id)
+            counts["manually_resolved"] += 1
+            continue
 
         hit: Receipt | None = None
         if s.tracking_number_normalized:

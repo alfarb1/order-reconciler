@@ -108,6 +108,10 @@ class Match(Base):
     match_type: Mapped[str] = mapped_column(String(32), index=True)
     flagged_reason: Mapped[str | None] = mapped_column(Text)
     created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
+    # Set when the user manually resolves a shipment through the web UI.
+    # reconcile() leaves rows with match_type='manual' alone, so these survive.
+    note: Mapped[str | None] = mapped_column(Text)
+    resolved_at: Mapped[datetime | None] = mapped_column(DateTime)
 
     shipment: Mapped[Shipment] = relationship(back_populates="match")
     receipt: Mapped[Receipt | None] = relationship()
@@ -122,10 +126,30 @@ def build_engine(db_path: Path):
 
 
 def init_db(db_path: Path):
-    """Create tables if they don't exist. Idempotent."""
+    """Create tables if they don't exist + lightweight column-only migrations.
+    Idempotent. SQLite doesn't support concurrent schema changes from SQLAlchemy
+    metadata for additive columns on existing tables, so we ADD COLUMN by hand
+    if a column is missing. Pre-existing data is preserved."""
     engine = build_engine(db_path)
     Base.metadata.create_all(engine)
+    _migrate_add_columns(engine)
     return engine
+
+
+def _migrate_add_columns(engine) -> None:
+    """Add nullable columns to `matches` if they don't exist yet."""
+    additions = [
+        ("matches", "note", "TEXT"),
+        ("matches", "resolved_at", "DATETIME"),
+    ]
+    with engine.begin() as conn:
+        for table, column, decl in additions:
+            existing = {
+                row[1]  # name is index 1 in PRAGMA table_info
+                for row in conn.exec_driver_sql(f'PRAGMA table_info("{table}")').fetchall()
+            }
+            if column not in existing:
+                conn.exec_driver_sql(f'ALTER TABLE "{table}" ADD COLUMN {column} {decl}')
 
 
 def make_session_factory(db_path: Path) -> sessionmaker[Session]:

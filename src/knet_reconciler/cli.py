@@ -259,6 +259,17 @@ def weekly(
 
 
 @app.command()
+def ui(
+    port: int = typer.Option(5050, help="Port to bind the local web UI to."),
+    no_browser: bool = typer.Option(False, "--no-browser", help="Don't auto-open the browser."),
+):
+    """Open the local web UI for marking shipments resolved manually."""
+    from .webui import run_server
+    cfg = load_config()
+    run_server(cfg, port=port, open_browser=not no_browser)
+
+
+@app.command()
 def review():
     """Interactive resolver for low-confidence parses and orphan receipts."""
     cfg = load_config()
